@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panduan Penggunaan — PABRIK—AI</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0B0B0D;--panel:#101014;--panel2:#15151B;--line:rgba(240,238,230,.15);--line2:rgba(240,238,230,.07);--ink:#F2F0EA;--body:#D8D5CC;--dim:#A6A199;--faint:#6E6A63;--red:#FF3E2E;--disp:'Anton',sans-serif;--sans:'Archivo',sans-serif;--mono:'JetBrains Mono',monospace}
+body{background:var(--bg);color:var(--body);font-family:var(--sans);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+::selection{background:var(--red);color:#0B0B0D}
+a{color:var(--red);text-decoration:none}a:hover{text-decoration:underline}
+::selection{background:var(--red);color:#0B0B0D}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#2A2A31}::-webkit-scrollbar-thumb:hover{background:var(--red)}
+.wrap{max-width:860px;margin:0 auto;padding:0 22px}
+header{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:16px;padding:0 24px;height:57px;background:rgba(11,11,13,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.logo{font-family:var(--disp);font-size:19px;color:var(--ink);letter-spacing:.04em}
+.logo em{font-style:normal;color:var(--red)}
+header .r{margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--faint);text-transform:uppercase}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:10px 16px;border:1px solid var(--line);color:var(--ink);display:inline-flex;align-items:center;gap:8px;transition:.18s}
+.btn:hover{border-color:var(--red);color:var(--red);text-decoration:none}
+.btn-red{background:var(--red);border-color:var(--red);color:#0B0B0D}.btn-red:hover{background:#FF5A4C;color:#0B0B0D}
+.hero{padding:64px 0 40px;border-bottom:1px solid var(--line)}
+.kick{font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--red);text-transform:uppercase;margin-bottom:18px}
+h1{font-family:var(--disp);font-weight:400;text-transform:uppercase;color:var(--ink);font-size:clamp(40px,8vw,84px);line-height:.95}
+.lead{color:var(--dim);max-width:640px;margin:22px 0 30px}
+.sec{padding:44px 0 8px}
+.seclab{font-family:var(--mono);font-size:10px;letter-spacing:.26em;color:var(--red);text-transform:uppercase;display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.seclab::after{content:'';flex:1;height:1px;background:var(--line)}
+h2{font-family:var(--disp);font-weight:400;text-transform:uppercase;color:var(--ink);font-size:clamp(26px,4vw,38px);margin:6px 0 14px;letter-spacing:.01em}
+h3{font-family:var(--disp);font-weight:400;text-transform:uppercase;color:var(--ink);font-size:20px;margin:34px 0 8px}
+h3 .no{color:var(--red);margin-right:10px}
+p{margin:10px 0;max-width:70ch}
+.kapan{font-family:var(--mono);font-size:11px;color:var(--dim);border-left:2px solid var(--red);padding:8px 14px;background:var(--panel);margin:14px 0;line-height:1.8}
+.kapan b{color:var(--ink);font-weight:500}
+ol.steps{list-style:none;counter-reset:st;margin:14px 0}
+ol.steps li{counter-increment:st;position:relative;padding:10px 0 10px 46px;border-bottom:1px solid var(--line2)}
+ol.steps li::before{content:counter(st,decimal-leading-zero);position:absolute;left:0;top:12px;font-family:var(--mono);font-size:11px;color:var(--red);letter-spacing:.1em}
+ol.steps b{color:var(--ink);font-weight:600}
+.tip{font-family:var(--mono);font-size:11px;color:var(--dim);border:1px dashed var(--line);padding:10px 14px;margin:12px 0;line-height:1.8}
+.tip::before{content:'💡 TIPS — ';color:var(--red);font-weight:700}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+th{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:8px 10px;border-bottom:1px solid var(--line2);vertical-align:top}
+td:first-child{font-family:var(--mono);font-size:12px;color:var(--red);white-space:nowrap}
+kbd{font-family:var(--mono);font-size:11px;background:var(--panel2);border:1px solid var(--line);padding:2px 7px;color:var(--ink)}
+.flow{border:1px solid var(--line);background:var(--panel);padding:18px 20px;margin:14px 0}
+.flow .fl{display:flex;align-items:baseline;gap:12px;padding:7px 0;font-size:14px}
+.flow .fl b{font-family:var(--mono);font-size:10px;color:var(--red);letter-spacing:.1em;white-space:nowrap}
+.faq dt{font-weight:600;color:var(--ink);margin-top:18px}
+.faq dd{margin:4px 0 0 0;color:var(--dim);max-width:70ch}
+footer{margin-top:70px;border-top:1px solid var(--line);padding:30px 0 50px;text-align:center}
+footer .mono{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--faint);text-transform:uppercase}
+footer b{color:var(--red)}
+@media(max-width:640px){header{padding:0 16px}header .r{display:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="logo">PABRIK<em>—</em>AI</span>
+  <span class="r">PANDUAN PENGGUNAAN · v2.0</span>
+  <a class="btn btn-red" href="index.html">BUKA APLIKASI</a>
+</header>
+
+<div class="hero"><div class="wrap">
+  <div class="kick">Panduan resmi · dibaca 10 menit · langsung bisa</div>
+  <h1>PANDUAN<br>PENGGUNAAN</h1>
+  <p class="lead">Dua belas modul produksi konten AI — dari merakit karakter sampai membedah video kompetitor. Panduan ini menjelaskan cara pakai tiap modul, cara merantai modul satu ke lainnya, dan trik-trik biar hasilnya konsisten. Semua proses berjalan lokal di browser kamu: tanpa server, tanpa upload, tanpa menunggu.</p>
+  <a class="btn btn-red" href="#dasar">MULAI DARI DASAR ↓</a>
+</div></div>
+
+<main class="wrap">
+
+<!-- ============ DASAR ============ -->
+<div class="sec" id="dasar">
+<div class="seclab">BAGIAN 00</div>
+<h2>Dasar Aplikasi</h2>
+<h3><span class="no">00.1</span>Membuka Modul</h3>
+<ol class="steps">
+<li><b>Buka situs</b> — tunggu intro countdown 3-2-1 selesai (atau klik untuk melewati).</li>
+<li>Di halaman indeks, <b>arahkan kursor ke modul</b> untuk membaca deskripsi singkatnya.</li>
+<li><b>Klik modul</b> mana pun untuk masuk ke ruang kerja. Tekan <kbd>ESC</kbd> kapan saja untuk kembali ke indeks.</li>
+</ol>
+<h3><span class="no">00.2</span>Ruang Kerja</h3>
+<ol class="steps">
+<li><b>Panel kiri — PARAMETER:</b> semua pilihan yang membentuk konsep (dropdown, slider, chip).</li>
+<li><b>Panel kanan — HASIL:</b> dokumen output yang <b>ter-update langsung</b> setiap kamu mengubah parameter. Tidak ada tombol "generate" — semuanya live.</li>
+<li>Di layar HP, dua panel berubah jadi <b>tab di bawah layar</b>: PARAMETER dan HASIL.</li>
+<li>Tekan <b>ROLL</b> di bagian bawah panel kiri untuk <b>mengacak semua parameter</b> sekaligus — cara tercepat mencari ide baru.</li>
+</ol>
+<h3><span class="no">00.3</span>Menyimpan Hasil</h3>
+<ol class="steps">
+<li><b>SALIN</b> — menyalin satu prompt ke clipboard.</li>
+<li><b>SALIN SEMUA</b> — menyalin seluruh dokumen (prompt + script + catatan).</li>
+<li><b>UNDUH .TXT</b> — mengunduh dokumen sebagai file teks.</li>
+<li><b>SIMPAN TAKE</b> — mengarsipkan ke riwayat. Buka lewat ikon riwayat di pojok kanan atas; tersimpan di perangkat kamu sendiri.</li>
+</ol>
+<div class="tip">Menyalin prompt otomatis ikut menyimpan TAKE — jadi semua ide yang sudah kamu pakai tidak pernah hilang.</div>
+</div>
+
+<!-- ============ ISTILAH ============ -->
+<div class="sec">
+<div class="seclab">BAGIAN 01</div>
+<h2>Istilah Penting</h2>
+<table>
+<tr><th>Istilah</th><th>Artinya</th></tr>
+<tr><td>Master Prompt</td><td>Prompt inti yang menyimpan identitas (karakter/scene). Simpan baik-baik — ini "kunci" konsistensi antar-gambar.</td></tr>
+<tr><td>Negative Prompt</td><td>Daftar hal yang harus dihindari AI (tangan cacat, watermark, dll). Tempel di kolom negative pada tool tujuan.</td></tr>
+<tr><td>TAKE</td><td>Satu versi hasil yang diarsipkan. Istilah pinjaman dari dunia film: "take satu, take dua…"</td></tr>
+<tr><td>Timecode</td><td>Format waktu <span style="font-family:var(--mono)">JJ:MM:DD:FF</span> (jam:menit:detik:frame). Dipakai di script supaya timing presisi.</td></tr>
+<tr><td>Format output</td><td>Bentuk akhir prompt: <b>Midjourney</b> (dengan parameter --ar), <b>SDXL</b> (dengan resolusi), <b>Flux</b> (kalimat natural), atau <b>Umum</b>.</td></tr>
+</table>
+</div>
+
+<!-- ============ GRUP A ============ -->
+<div class="sec">
+<div class="seclab">BAGIAN 02 · GRUP A</div>
+<h2>Modul Karakter</h2>
+
+<h3><span class="no">01</span>Character Generator</h3>
+<div class="kapan"><b>Kapan dipakai:</b> saat butuh karakter AI baru dari nol — untuk konten, campaign, atau drama.</div>
+<ol class="steps">
+<li>Isi <b>nama karakter</b> (kosongkan kalau mau dibuatkan, atau tekan ROLL).</li>
+<li>Pilih <b>gender, usia, dan etnis</b> — deskripsi etnis sudah diterjemahkan ke bahasa prompt otomatis.</li>
+<li>Tentukan <b>rambut, outfit, dan ekspresi</b>.</li>
+<li>Pilih <b>lokasi, pencahayaan, dan angle kamera</b> — tiga hal ini yang paling menentukan mood foto.</li>
+<li>Pilih <b>rasio</b> (9:16 untuk TikTok/Reels, 1:1 untuk feed) dan <b>format output</b> sesuai tool gambar yang kamu pakai.</li>
+<li>Salin <b>MASTER PROMPT</b> → tempel di Midjourney / Stable Diffusion / Flux.</li>
+<li>Butuh variasi angle untuk karakter yang sama? Gunakan <b>3 PROMPT TURUNAN</b> — wajah dan outfit tetap, hanya angle yang berubah.</li>
+</ol>
+<div class="tip">Simpan MASTER PROMPT di catatan. Untuk konsistensi wajah antar-gambar, pakai fitur referensi: <b>--cref</b> di Midjourney, IP-Adapter/PuLID di SDXL, atau referensi Flux.</div>
+
+<h3><span class="no">02</span>Character Clone</h3>
+<div class="kapan"><b>Kapan dipakai:</b> saat sudah punya gambar karakter dan mau memakainya berulang di berbagai konten.</div>
+<ol class="steps">
+<li><b>Unggah gambar referensi</b> — sistem otomatis membaca 5 warna dominan sebagai palet. Semua diproses lokal, gambar tidak dikirim ke mana pun.</li>
+<li>Isi <b>fitur yang wajib terkunci</b> sedetail mungkin: bentuk wajah, tahi lalat, model rambut, senyum khas. Makin detail, makin kuat kuncinya.</li>
+<li>Pilih <b>aspek yang boleh divariasikan</b> (pose, outfit, latar, dst).</li>
+<li>Salin <b>CHARACTER LOCK PROMPT</b> dan gunakan bersama gambar referensi di tool gambar kamu.</li>
+</ol>
+<div class="tip">Palet warna yang terekstrak bisa jadi acuan grading feed — konsistensi warna = feed terlihat profesional.</div>
+
+<h3><span class="no">03</span>Character Modifier</h3>
+<div class="kapan"><b>Kapan dipakai:</b> saat karakter sudah ada tapi butuh diubah sebagian — tanpa merakit ulang dari awal.</div>
+<ol class="steps">
+<li><b>Tempel prompt lama</b> karakter kamu di kolom paling atas.</li>
+<li>Pilih <b>aspek yang diubah</b> (outfit, ekspresi, pose, dll).</li>
+<li>Tulis <b>detail perubahan</b> dengan bahasa sehari-hari, misal: "ganti jadi jas hitam, ekspresi menahan tangis".</li>
+<li>Atur <b>intensitas</b>: angka kecil = perubahan halus, angka besar = perubahan drastis.</li>
+<li>Untuk perubahan kecil pakai <b>DELTA PROMPT</b>; untuk perubahan besar pakai <b>FULL PROMPT</b>.</li>
+</ol>
+</div>
+
+<!-- ============ GRUP B ============ -->
+<div class="sec">
+<div class="seclab">BAGIAN 03 · GRUP B</div>
+<h2>Modul Gambar &amp; Prompt</h2>
+
+<h3><span class="no">04</span>Image Generator</h3>
+<div class="kapan"><b>Kapan dipakai:</b> bikin gambar AI apa pun dengan pilihan yang sudah disederhanakan.</div>
+<ol class="steps">
+<li>Tulis <b>ide gambar</b> sebebas mungkin — bahasa Indonesia pun boleh.</li>
+<li>Tekan <b>PERKAYA PROMPT</b> — sistem otomatis menambah 3 lapis detail teknis ke idemu.</li>
+<li>Atur arah visual: <b>gaya, mood, waktu, lensa, komposisi, pencahayaan</b>.</li>
+<li>Output memberi 1 master prompt + <b>3 arah pengembangan</b> (lebih sinematik / editorial / dramatis). Coba semuanya, bandingkan hasilnya.</li>
+</ol>
+
+<h3><span class="no">09</span>Prompt Siap Pakai</h3>
+<div class="kapan"><b>Kapan dipakai:</b> butuh inspirasi cepat tanpa menyusun prompt sendiri.</div>
+<ol class="steps">
+<li><b>Cari</b> dengan kata kunci atau <b>filter per kategori</b> (karakter, potret, sinematik, produk, fashion, lanskap, 3D, makanan).</li>
+<li>Klik judul untuk membuka prompt lengkapnya.</li>
+<li><b>SALIN</b> apa adanya, atau <b>KIRIM KE IMAGE GENERATOR</b> untuk dikembangkan lebih jauh dengan pengaturan lengkap.</li>
+</ol>
+<div class="tip">32 prompt ini ditulis dengan struktur yang teruji. Pelajari polanya — lalu modif untuk kebutuhanmu sendiri.</div>
+</div>
+
+<!-- ============ GRUP C ============ -->
+<div class="sec">
+<div class="seclab">BAGIAN 04 · GRUP C</div>
+<h2>Modul Konten &amp; Promosi</h2>
+
+<h3><span class="no">05</span>AI Influencer Maker</h3>
+<div class="kapan"><b>Kapan dipakai:</b> membangun persona influencer AI yang utuh — bukan cuma wajah.</div>
+<ol class="steps">
+<li>Pilih <b>niche</b> dan <b>persona</b> — keduanya menentukan seluruh karakter visual.</li>
+<li>Simpan <b>FACE MASTER PROMPT</b> — ini identitas tetap. Setiap generate ulang, bagian ini tidak boleh berubah.</li>
+<li>Gunakan <b>TEMPLATE PROMPT HARIAN</b> untuk konten rutin: tinggal ganti bagian aktivitas &amp; lokasi.</li>
+<li>Ikuti <b>ritme posting 7 hari</b> dan 6 ide konten pembuka yang sudah disusun.</li>
+</ol>
+<div class="tip">Aturan emas: generate wajah SEKALI, simpan sebagai referensi, lalu variasikan hanya pakaian/lokasi/aktivitas. Palet feed dijaga dengan grading seragam.</div>
+
+<h3><span class="no">06</span>UGC Content</h3>
+<div class="kapan"><b>Kapan dipakai:</b> konten jualan gaya "dibuat orang biasa" — untuk produk sendiri atau affiliate.</div>
+<ol class="steps">
+<li>Isi <b>nama produk</b> dan <b>masalah yang diselesaikannya</b> — tulis masalahnya sejujur mungkin, di situlah kekuatan UGC.</li>
+<li>Pilih <b>durasi</b> (15s / 30s / 60s) dan <b>tone</b>.</li>
+<li>Rekam mengikuti <b>script ber-timecode</b> — tiap segmen sudah ada narasi + visualnya.</li>
+<li>Uji dulu <b>3 pilihan hook</b> — rekam ketiganya, unggah yang paling kuat menahan scroll.</li>
+<li>Salin <b>caption + hashtag</b> yang sudah disiapkan.</li>
+</ol>
+
+<h3><span class="no">11</span>Ads Maker</h3>
+<div class="kapan"><b>Kapan dipakai:</b> butuh konsep iklan yang terukur — bukan sekadar "jualan keras".</div>
+<ol class="steps">
+<li>Isi <b>produk, tujuan iklan</b> (awareness / konversi / traffic), dan <b>offer</b>.</li>
+<li>Tulis <b>pain point audiens</b> — makin spesifik, makin terasa "ini gue banget".</li>
+<li>Pelajari <b>3 sudut psikologis</b> (sakit / bukti / geliat) lalu pilih satu untuk dieksekusi.</li>
+<li>Rekam sesuai script timecode, gunakan headline terkuat dari 5 pilihan.</li>
+</ol>
+<div class="tip">A/B test: jalankan dua sudut berbeda dengan budget kecil 3–4 hari, matikan yang kalah. Pastikan hanya HOOK yang berbeda — variabel lain harus sama.</div>
+</div>
+
+<!-- ============ GRUP D ============ -->
+<div class="sec">
+<div class="seclab">BAGIAN 05 · GRUP D</div>
+<h2>Modul Video &amp; Ekstraksi</h2>
+
+<h3><span class="no">07</span>Drama Pendek V2</h3>
+<div class="kapan"><b>Kapan dipakai:</b> bikin drama pendek utuh — dari ide sampai dialog per scene.</div>
+<ol class="steps">
+<li><b>Langkah 1 — Ide:</b> pilih genre, tone, durasi, dan platform.</li>
+<li><b>Langkah 2 — Karakter:</b> isi tokoh utama, profesi, penentang, dan orang terdekat.</li>
+<li><b>Langkah 3 — Struktur:</b> pilih template cerita, jumlah scene, dan latar. Tekan RENDER HASIL.</li>
+<li>Kamu dapat <b>production bible mini</b>: logline, character sheet, dan breakdown per scene — lengkap dengan aksi, dialog, usulan shot, durasi, dan prompt visual siap generate.</li>
+</ol>
+<div class="tip">Kunci wajah tokoh dulu dengan Character Generator SEBELUM render scene — wajah yang berubah antar shot adalah pembunuh utama drama AI.</div>
+
+<h3><span class="no">08</span>Music Clip V2</h3>
+<div class="kapan"><b>Kapan dipakai:</b> video musik AI yang potongannya jatuh tepat di beat.</div>
+<ol class="steps">
+<li>Isi <b>judul, genre, mood, durasi, dan BPM</b> lagu kamu (BPM bisa dicek di aplikasi musik apa pun).</li>
+<li>Pilih konsep: performa+naratif / one-take / metafora visual / storyline.</li>
+<li>Shotlist otomatis <b>dipetakan ke beat dan bar</b> — kamu akan tahu potongan harus jatuh di detik ke berapa.</li>
+<li>Di aplikasi editing, pasang marker setiap N beat sesuai spesifikasi, lalu selaraskan shotlist ke marker.</li>
+</ol>
+
+<h3><span class="no">10</span>Scene Extractor</h3>
+<div class="kapan"><b>Kapan dipakai:</b> membedah video (misal milik kompetitor) untuk dipelajari strukturnya.</div>
+<ol class="steps">
+<li><b>Unggah video</b> — MP4/WebM/MOV. Video diproses 100% lokal di browser, tidak pernah diunggah ke server mana pun.</li>
+<li>Atur <b>sensitivitas deteksi</b>: rendah untuk cut keras saja, tinggi agar transisi halus ikut terdeteksi.</li>
+<li>Tekan <b>DETEKSI SCENE</b> — sistem membandingkan piksel antar frame untuk menemukan pergantian shot.</li>
+<li>Pelajari hasilnya: jumlah scene, durasi rata-rata, <b>cut per menit</b>, dan klasifikasi irama (tenang/sedang/cepat).</li>
+<li>Salin <b>laporan timecode</b> atau unduh keyframe tiap scene.</li>
+</ol>
+
+<h3><span class="no">12</span>Frame Extractor</h3>
+<div class="kapan"><b>Kapan dipakai:</b> mengambil frame penting untuk storyboard, referensi warna, atau bahan produksi.</div>
+<ol class="steps">
+<li>Unggah video, lalu pilih mode: <b>MERATA</b> (sejumlah frame dibagi rata) atau <b>INTERVAL</b> (satu frame tiap N detik).</li>
+<li>Tekan <b>EKSTRAKSI FRAME</b>.</li>
+<li>Klik gambar untuk memperbesar, unduh satu-satu atau semuanya sekaligus.</li>
+</ol>
+</div>
+
+<!-- ============ ALUR RANTAI ============ -->
+<div class="sec">
+<div class="seclab">BAGIAN 06</div>
+<h2>Merantai Modul</h2>
+<p>Kekuatan sebenarnya muncul saat modul dipakai berurutan. Dua resep andalan:</p>
+
+<h3>Resep 1 — Drama pendek dari nol</h3>
+<div class="flow">
+<div class="fl"><b>01 CHARACTER GEN</b><span>susun wajah tokoh → salin master prompt</span></div>
+<div class="fl"><b>↳ GENERATE</b><span>buat gambar karakter di tool favoritmu</span></div>
+<div class="fl"><b>02 CLONE</b><span>unggah hasilnya → dapat lock sheet untuk semua scene</span></div>
+<div class="fl"><b>07 DRAMA V2</b><span>dapat breakdown scene + prompt visual per scene</span></div>
+<div class="fl"><b>↳ RENDER</b><span>generate tiap scene pakai prompt + referensi wajah</span></div>
+<div class="fl"><b>12 FRAME EXT</b><span>ekstrak frame referensi untuk storyboard/montage</span></div>
+</div>
+
+<h3>Resep 2 — Konten jualan UGC</h3>
+<div class="flow">
+<div class="fl"><b>09 PROMPT LIB</b><span>ambil prompt produk yang cocok</span></div>
+<div class="fl"><b>04 IMAGE GEN</b><span>kirim ke sini → perkaya → generate visual produk</span></div>
+<div class="fl"><b>06 UGC</b><span>script ber-timecode + hook + caption</span></div>
+<div class="fl"><b>11 ADS</b><span>bikin versi iklan dari produk yang sama</span></div>
+<div class="fl"><b>10 SCENE EXT</b><span>bedah video UGC yang viral → tiru ritme potongannya</span></div>
+</div>
+</div>
+
+<!-- ============ FAQ ============ -->
+<div class="sec">
+<div class="seclab">BAGIAN 07</div>
+<h2>Tanya Jawab</h2>
+<dl class="faq">
+<dt>Apakah video/gambar saya aman?</dt>
+<dd>Sangat aman. Semua file diproses lewat Canvas API langsung di browser kamu — tidak ada satu byte pun yang dikirim ke server.</dd>
+<dt>Kok hasil kosong / tidak berubah?</dt>
+<dd>Pastikan kolom wajib sudah terisi (misalnya "ide gambar" di Image Generator). Output selalu ter-update live — tidak ada tombol generate.</dd>
+<dt>Kok ikon tidak muncul?</dt>
+<dd>Ikon dan font dimuat dari internet saat pertama kali dibuka. Tanpa koneksi, aplikasi tetap berfungsi penuh — hanya tampilan ikon/font yang memakai cadangan sistem.</dd>
+<dt>Riwayat TAKE saya hilang setelah ganti HP?</dt>
+<dd>TAKE tersimpan di localStorage per browser per perangkat. Salin dokumen penting ke .TXT sebelum pindah perangkat.</dd>
+<dt>Prompt ini dipakai di tool AI mana?</dt>
+<dd>Output mendukung Midjourney (--ar otomatis), Stable Diffusion/SDXL (resolusi disertakan), Flux, dan format umum. Pilih "Format output" sesuai toolmu.</dd>
+<dt>Gratis?</dt>
+<dd>100% gratis, tanpa akun, tanpa batas pemakaian.</dd>
+</dl>
+</div>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="mono">PABRIK—AI · TOOLKIT v2.0 · PANDUAN PENGGUNAAN</div>
+    <div class="mono" style="margin-top:8px">DEVELOPED BY <b>HIJRAH45</b> · GITHUB.COM/H45LABS</div>
+  </div>
+</footer>
+
+</body>
+</html>
