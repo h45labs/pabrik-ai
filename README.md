@@ -94,7 +94,7 @@ Atau cukup download repo, lalu double-click <code>index.html</code>.</p>
 
 <div align="center">
 
-<p><strong>DEVELOPED BY <a href="https://github.com/h45labs">HIJRAH45</a></strong></p>
+<p><strong>Developer by <a href="https://github.com/h45labs">HijraH45</a></strong></p>
 
 <p><code>PABRIK—AI · TOOLKIT v2.0 · 24 FPS · REC</code></p>
 
