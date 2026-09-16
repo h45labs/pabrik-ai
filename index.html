@@ -1,0 +1,1960 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PABRIK—AI · AI Tools Toolkit v2.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0B0B0D;--panel:#101014;--panel2:#15151B;
+  --line:rgba(240,238,230,.15);--line2:rgba(240,238,230,.07);
+  --ink:#F2F0EA;--body:#D8D5CC;--dim:#A6A199;--faint:#6E6A63;
+  --red:#FF3E2E;--live:#3BE07C;
+  --disp:'Anton',sans-serif;--sans:'Archivo',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--body);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+::selection{background:var(--red);color:#0B0B0D}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#2A2A31;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:var(--red)}
+button{font-family:inherit;cursor:pointer;background:none;border:none;color:inherit}
+input,select,textarea{font-family:inherit;color:var(--ink)}
+.mono{font-family:var(--mono)}
+i[data-lucide],.lucide{width:15px;height:15px;stroke-width:2}
+#grain{position:fixed;inset:-60%;width:220%;height:220%;pointer-events:none;z-index:1800;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='0.7'/%3E%3C/svg%3E");animation:grain 7s steps(8) infinite}
+@keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-2%,3%)}50%{transform:translate(3%,-2%)}75%{transform:translate(-3%,-3%)}100%{transform:translate(2%,2%)}}
+#intro{position:fixed;inset:0;z-index:3000;background:#050506;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity .4s,transform .6s cubic-bezier(.7,0,.2,1)}
+#intro.gone{opacity:0;transform:translateX(-100%);pointer-events:none}
+.in-circle{position:absolute;width:min(62vmin,480px);height:min(62vmin,480px);border:1px solid rgba(240,238,230,.25);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.in-circle::before{content:'';position:absolute;inset:14%;border:1px solid rgba(240,238,230,.14);border-radius:50%}
+.in-sweep{position:absolute;width:100%;height:100%;border-radius:50%;background:conic-gradient(rgba(255,62,46,.28) 0 7deg,transparent 7deg 360deg);animation:sweep 1s linear infinite}
+@keyframes sweep{to{transform:rotate(360deg)}}
+.in-cross-h,.in-cross-v{position:absolute;background:rgba(240,238,230,.18)}
+.in-cross-h{left:-12vw;right:-12vw;height:1px}
+.in-cross-v{top:-12vh;bottom:-12vh;width:1px}
+#inNum{font-family:var(--disp);font-size:clamp(110px,26vmin,220px);color:var(--ink);line-height:1}
+.in-tag{position:absolute;bottom:7vh;font-family:var(--mono);font-size:11px;letter-spacing:.28em;color:var(--faint);text-transform:uppercase}
+.in-skip{position:absolute;top:24px;right:28px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--faint)}
+#wipe{position:fixed;inset:0;background:#000;z-index:1500;pointer-events:none;transform:scaleX(0)}
+#wipe.run{animation:wp .56s cubic-bezier(.75,0,.2,1) forwards}
+@keyframes wp{0%{transform:scaleX(0);transform-origin:left}49.5%{transform:scaleX(1);transform-origin:left}50.5%{transform:scaleX(1);transform-origin:right}100%{transform:scaleX(0);transform-origin:right}}
+#hdr{position:sticky;top:0;z-index:900;height:57px;display:flex;align-items:center;gap:20px;padding:0 24px;background:rgba(11,11,13,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.logo{font-family:var(--disp);font-size:21px;letter-spacing:.04em;color:var(--ink);display:flex;align-items:baseline;gap:8px}
+.logo em{font-style:normal;color:var(--red)}
+.logo small{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--faint)}
+.hdr-crumb{font-size:10px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;border-left:1px solid var(--line);padding-left:20px}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:18px}
+.tc{font-size:12px;color:var(--ink);letter-spacing:.06em}
+.tc b{color:var(--red);font-weight:500}
+.fps{font-size:10px;color:var(--faint);letter-spacing:.14em}
+.rec-dot{width:8px;height:8px;border-radius:50%;background:#3A3A41}
+.rec-dot.on{background:var(--red);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:.25}}
+.icon-btn{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);color:var(--dim);position:relative;transition:.2s}
+.icon-btn:hover{border-color:var(--red);color:var(--red)}
+.take-count{position:absolute;top:-7px;right:-7px;min-width:16px;height:16px;background:var(--red);color:#0B0B0D;font-family:var(--mono);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 3px}
+.btn{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:11px 18px;border:1px solid var(--line);color:var(--ink);display:inline-flex;align-items:center;gap:8px;transition:.18s;background:transparent}
+.btn:hover{border-color:var(--red);color:var(--red)}
+.btn:active{transform:scale(.97)}
+.btn-red{background:var(--red);border-color:var(--red);color:#0B0B0D}
+.btn-red:hover{background:#FF5A4C;color:#0B0B0D;border-color:#FF5A4C}
+.mini-btn{font-family:var(--mono);font-size:10px;letter-spacing:.1em;padding:6px 10px;border:1px solid var(--line);color:var(--dim);display:inline-flex;align-items:center;gap:6px;transition:.15s;text-transform:uppercase;background:rgba(11,11,13,.6)}
+.mini-btn:hover{border-color:var(--red);color:var(--red)}
+.mini-btn i,.mini-btn .lucide{width:12px;height:12px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+#hero{position:relative;overflow:hidden;padding:84px 0 64px;border-bottom:1px solid var(--line)}
+#hero .wrap{display:grid;grid-template-columns:1.25fr .75fr;gap:56px;align-items:end}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--red);text-transform:uppercase;display:flex;align-items:center;gap:14px;margin-bottom:26px}
+.kicker::after{content:'';flex:1;height:1px;background:var(--line)}
+h1{font-family:var(--disp);font-weight:400;text-transform:uppercase;color:var(--ink);font-size:clamp(58px,9.5vw,138px);line-height:.94;letter-spacing:.01em}
+h1 .ghost{color:transparent;-webkit-text-stroke:1.5px var(--ink)}
+.hero-sub{max-width:520px;margin:28px 0 34px;color:var(--dim)}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+.data-card{border:1px solid var(--line);padding:26px 26px 20px;background:var(--panel)}
+.dc-row{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--line2);font-family:var(--mono);font-size:11px;letter-spacing:.08em}
+.dc-row span{color:var(--faint);text-transform:uppercase}
+.dc-row b{color:var(--ink);font-weight:500}
+.dc-tc{font-size:clamp(26px,3vw,38px);color:var(--red);letter-spacing:.04em;margin:14px 0 4px}
+.dc-tc-l{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.22em;text-transform:uppercase;margin-bottom:10px}
+.xh{position:absolute;pointer-events:none;opacity:0;transition:opacity .3s}
+#hero.aim .xh{opacity:1}
+.xh-v{top:0;bottom:0;width:1px;background:rgba(255,62,46,.32)}
+.xh-h{left:0;right:0;height:1px;background:rgba(255,62,46,.32)}
+.xh-dot{width:56px;height:56px;border:1px solid rgba(255,62,46,.55);border-radius:50%}
+.xh-dot::before,.xh-dot::after{content:'';position:absolute;background:rgba(255,62,46,.55)}
+.xh-dot::before{left:50%;top:-8px;bottom:-8px;width:1px}
+.xh-dot::after{top:50%;left:-8px;right:-8px;height:1px}
+.xh-tag{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--red);white-space:nowrap}
+#legend{padding:16px 0;border-bottom:1px solid var(--line)}
+#legend .wrap{display:flex;flex-wrap:wrap}
+.lg{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--dim);padding:6px 22px;border-left:1px solid var(--line);text-transform:uppercase}
+.lg:first-child{border-left:none;padding-left:0}
+.lg b{color:var(--red);font-weight:500}
+#modul{padding:26px 0 110px}
+.grp{margin-top:54px}
+.grp:first-child{margin-top:22px}
+.grp-h{display:flex;align-items:baseline;gap:18px;margin-bottom:6px}
+.grp-h .g-id{font-family:var(--disp);font-size:26px;color:var(--red)}
+.grp-h .g-t{font-family:var(--mono);font-size:11px;letter-spacing:.26em;color:var(--ink);text-transform:uppercase}
+.grp-h .g-line{flex:1;height:1px;background:var(--line)}
+.grp-h .g-n{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.14em}
+.row{border-top:1px solid var(--line);cursor:pointer;position:relative}
+.row:last-child{border-bottom:1px solid var(--line)}
+.row::before{content:'';position:absolute;left:-24px;top:0;bottom:0;width:3px;background:var(--red);transform:scaleY(0);transition:.3s;transform-origin:top}
+.row:hover::before{transform:scaleY(1)}
+.row-head{display:grid;grid-template-columns:74px 1fr auto auto 44px;align-items:center;gap:18px;padding:24px 0 20px}
+.row-num{font-family:var(--mono);font-size:13px;color:var(--faint);letter-spacing:.1em;transition:.25s}
+.row-name{font-family:var(--disp);font-weight:400;text-transform:uppercase;font-size:clamp(26px,3.6vw,50px);line-height:1;color:var(--ink);transition:.3s cubic-bezier(.2,.8,.2,1);letter-spacing:.01em}
+.row-cat{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;text-align:right}
+.row-badge{font-family:var(--mono);font-size:9px;letter-spacing:.12em;padding:4px 8px;border:1px solid var(--line)}
+.row-badge.gen{color:var(--red);border-color:rgba(255,62,46,.5)}
+.row-badge.live{color:var(--live);border-color:rgba(59,224,124,.4)}
+.row-badge.lib{color:var(--dim)}
+.row-arrow{display:flex;justify-content:flex-end;color:var(--faint);transition:.3s}
+.row:hover .row-num{color:var(--red)}
+.row:hover .row-name{transform:translateX(12px);color:var(--red)}
+.row:hover .row-arrow{color:var(--red);transform:translate(4px,-4px)}
+.row-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .38s cubic-bezier(.2,.8,.2,1)}
+.row:hover .row-body{grid-template-rows:1fr}
+.row-body>div{overflow:hidden}
+.row-desc{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;padding:0 0 24px 92px}
+.row-desc p{max-width:640px;color:var(--dim);font-size:14px}
+.row-desc .mini-btn{flex-shrink:0;margin-bottom:2px}
+#viewStage{display:flex;flex-direction:column;height:calc(100vh - 57px);overflow:hidden}
+.st-top{display:flex;align-items:center;gap:22px;padding:14px 24px;border-bottom:1px solid var(--line);background:var(--panel)}
+.st-title{font-family:var(--disp);text-transform:uppercase;font-size:22px;color:var(--ink);letter-spacing:.02em}
+.st-title em{font-style:normal;color:var(--red);margin-right:12px}
+.st-hint{margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--faint);text-transform:uppercase}
+#stageGrid{flex:1;display:grid;grid-template-columns:20px 400px 1fr;min-height:0;position:relative}
+.rail{background:repeating-linear-gradient(to bottom,transparent 0 9px,rgba(240,238,230,.09) 9px 23px);border-right:1px solid var(--line2)}
+#stageForm{border-right:1px solid var(--line);overflow-y:auto;padding:26px 26px 60px}
+#stageOut{overflow-y:auto;padding:26px 34px 80px;position:relative}
+.mtabs{display:none}
+.f-sec{font-family:var(--mono);font-size:10px;letter-spacing:.26em;color:var(--red);text-transform:uppercase;margin:30px 0 6px;display:flex;align-items:center;gap:12px}
+.f-sec::after{content:'';flex:1;height:1px;background:var(--line2)}
+.f-sec:first-child{margin-top:0}
+.field{margin:16px 0}
+.f-label{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;margin-bottom:8px}
+.f-hint{color:var(--faint);letter-spacing:.04em;text-transform:none;font-size:9px}
+.f-in,.f-ta,.f-sel select{width:100%;background:var(--panel2);border:1px solid var(--line);padding:11px 12px;font-size:13.5px;transition:.18s;border-radius:0}
+.f-ta{resize:vertical;min-height:74px;line-height:1.55}
+.f-in:focus,.f-ta:focus,.f-sel select:focus{outline:none;border-color:var(--red);background:#17171D}
+.f-sel{position:relative}
+.f-sel select{appearance:none;padding-right:34px;cursor:pointer}
+.f-sel .lucide{position:absolute;right:11px;top:50%;transform:translateY(-50%);color:var(--faint);pointer-events:none;width:14px;height:14px}
+.f-sel select option{background:#15151B}
+.seg{display:flex;flex-wrap:wrap;border:1px solid var(--line)}
+.seg-b{flex:1;padding:9px 6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--dim);border-right:1px solid var(--line);transition:.15s;white-space:nowrap}
+.seg-b:last-child{border-right:none}
+.seg-b:hover{color:var(--ink)}
+.seg-b.on{background:var(--red);color:#0B0B0D;font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;padding:7px 12px;border:1px solid var(--line);color:var(--dim);transition:.15s}
+.chip:hover{color:var(--ink);border-color:var(--dim)}
+.chip.on{border-color:var(--red);color:var(--red);background:rgba(255,62,46,.08)}
+.sl{display:flex;align-items:center;gap:14px}
+.sl input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:2px;background:var(--line);outline:none}
+.sl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;background:var(--red);cursor:grab;border:none}
+.sl input[type=range]::-moz-range-thumb{width:15px;height:15px;background:var(--red);cursor:grab;border:none;border-radius:0}
+.sl-v{font-family:var(--mono);font-size:11px;color:var(--ink);min-width:56px;text-align:right}
+.f-note{font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:-4px;line-height:1.7}
+.stepnav{display:flex;gap:10px;margin-top:30px;padding-top:22px;border-top:1px solid var(--line)}
+.stepind{display:flex;gap:6px;margin:4px 0 8px}
+.stepind i{height:3px;flex:1;background:var(--line)}
+.stepind i.on{background:var(--red)}
+.drop{border:1px dashed var(--line);padding:30px 18px;text-align:center;color:var(--dim);cursor:pointer;transition:.2s;margin:16px 0}
+.drop:hover,.drop.over{border-color:var(--red);color:var(--ink);background:rgba(255,62,46,.04)}
+.drop .lucide{width:26px;height:26px;color:var(--red);margin-bottom:10px}
+.drop b{display:block;color:var(--ink);font-size:13px;margin-bottom:3px}
+.drop span{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.06em}
+.up-prev{margin-top:12px;border:1px solid var(--line);padding:12px;display:flex;gap:14px;align-items:center}
+.up-prev img{width:72px;height:72px;object-fit:cover;border:1px solid var(--line)}
+.pal-prev{display:flex;gap:6px;margin-top:8px}
+.pal-prev i{width:22px;height:22px;display:block;border:1px solid rgba(0,0,0,.4)}
+.out-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:26px;padding-bottom:20px;border-bottom:1px solid var(--line);position:sticky;top:-27px;background:var(--bg);z-index:5;padding-top:2px}
+.out-title{font-family:var(--disp);text-transform:uppercase;font-size:30px;color:var(--ink);line-height:1.1}
+.out-meta{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.14em;margin-top:8px;text-transform:uppercase}
+.out-actions{display:flex;gap:8px;flex-wrap:wrap}
+.b-h{display:flex;align-items:center;gap:14px;margin:36px 0 14px}
+.b-h:first-child{margin-top:6px}
+.b-h span{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--red);text-transform:uppercase;white-space:nowrap}
+.b-h::after{content:'';flex:1;height:1px;background:var(--line)}
+.b-p{color:var(--body);margin:10px 0;max-width:72ch}
+.b-kv{display:grid;grid-template-columns:190px 1fr;gap:0 22px;margin:12px 0}
+.b-kv .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--faint);text-transform:uppercase;padding:8px 0;border-bottom:1px solid var(--line2)}
+.b-kv .v{color:var(--ink);padding:8px 0;border-bottom:1px solid var(--line2);font-size:13.5px}
+.b-list{list-style:none;margin:10px 0}
+.b-list li{padding:9px 0 9px 26px;border-bottom:1px solid var(--line2);position:relative;color:var(--body);font-size:13.5px}
+.b-list li::before{content:'';position:absolute;left:2px;top:16px;width:10px;height:2px;background:var(--red)}
+.b-list li b{color:var(--ink);font-weight:600}
+.b-note{font-family:var(--mono);font-size:11px;color:var(--dim);border-left:2px solid var(--red);padding:10px 16px;background:var(--panel);margin:16px 0;line-height:1.8}
+.b-prompt{border:1px solid var(--line);margin:16px 0;position:relative;background:var(--panel)}
+.b-prompt::before,.b-prompt::after{content:'';position:absolute;width:12px;height:12px;border-color:var(--red);border-style:solid}
+.b-prompt::before{top:-1px;left:-1px;border-width:2px 0 0 2px}
+.b-prompt::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+.bp-top{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:10px 14px;border-bottom:1px solid var(--line2)}
+.bp-title{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
+.b-prompt pre{font-family:var(--mono);font-size:12.5px;line-height:1.75;color:var(--ink);padding:16px;white-space:pre-wrap;word-break:break-word}
+.bp-foot{font-family:var(--mono);font-size:10px;color:var(--faint);padding:8px 14px;border-top:1px solid var(--line2);letter-spacing:.06em}
+.b-pal{display:flex;gap:8px;margin:14px 0;flex-wrap:wrap}
+.b-pal .sw{width:52px}
+.b-pal .sw i{display:block;height:44px;border:1px solid var(--line)}
+.b-pal .sw span{display:block;font-family:var(--mono);font-size:9px;color:var(--faint);text-align:center;margin-top:5px}
+.b-scene{border:1px solid var(--line);margin:14px 0;background:var(--panel)}
+.bs-head{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:10px 16px;background:var(--panel2);border-bottom:1px solid var(--line2);flex-wrap:wrap}
+.bs-head b{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--red);text-transform:uppercase;font-weight:500}
+.bs-head span{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.08em}
+.bs-body{padding:14px 16px}
+.bs-row{display:grid;grid-template-columns:110px 1fr;gap:6px 18px;padding:7px 0;border-bottom:1px solid var(--line2);font-size:13.5px}
+.bs-row:last-child{border-bottom:none}
+.bs-row .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--faint);text-transform:uppercase;padding-top:3px}
+.bs-row .v{color:var(--body)}
+.prog{margin:18px 0;border:1px solid var(--line);background:var(--panel)}
+.prog-bar{height:3px;background:var(--line2);position:relative}
+.prog-bar i{position:absolute;left:0;top:0;bottom:0;background:var(--red);width:0;transition:width .15s}
+.prog-l{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--dim);padding:10px 14px;display:flex;justify-content:space-between}
+.prog-l b{color:var(--red);font-weight:500}
+.frames{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:20px}
+.frame{border:1px solid var(--line);cursor:zoom-in;position:relative;background:var(--panel);transition:.18s}
+.frame:hover{border-color:var(--red);transform:translateY(-3px)}
+.frame img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.frame .ftc{font-family:var(--mono);font-size:9.5px;color:var(--ink);background:rgba(11,11,13,.82);padding:4px 8px;position:absolute;left:0;bottom:0;letter-spacing:.06em}
+.frame .fdl{position:absolute;top:6px;right:6px;opacity:0;transition:.15s}
+.frame:hover .fdl{opacity:1}
+.scene-it{border:1px solid var(--line);margin:12px 0;background:var(--panel)}
+.si-head{display:grid;grid-template-columns:118px 1fr auto;gap:16px;align-items:center;padding:10px;cursor:pointer}
+.si-head:hover{background:var(--panel2)}
+.si-head img{width:118px;aspect-ratio:16/9;object-fit:cover;border:1px solid var(--line2);display:block}
+.si-meta b{font-family:var(--mono);font-size:11px;color:var(--red);letter-spacing:.12em;display:block}
+.si-meta span{font-family:var(--mono);font-size:10px;color:var(--dim);display:block;margin-top:4px;letter-spacing:.06em}
+.si-dur{font-family:var(--mono);font-size:11px;color:var(--ink)}
+.si-body{display:none;padding:4px 14px 16px;border-top:1px solid var(--line2)}
+.scene-it.open .si-body{display:block}
+.si-strip{display:flex;gap:6px;overflow-x:auto;padding:12px 0 4px}
+.si-strip img{height:54px;border:1px solid var(--line2);display:block}
+.empty{border:1px dashed var(--line);padding:70px 30px;text-align:center;color:var(--faint);margin-top:20px}
+.empty .lucide{width:30px;height:30px;color:var(--red);margin-bottom:14px}
+.empty b{display:block;color:var(--dim);font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+.empty span{font-size:13px}
+.vidinfo{font-family:var(--mono);font-size:10.5px;color:var(--dim);border:1px solid var(--line);padding:10px 14px;margin-top:12px;letter-spacing:.06em;display:flex;gap:18px;flex-wrap:wrap}
+.vidinfo b{color:var(--ink);font-weight:500}
+.lib-search{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:var(--panel2);padding:0 14px;margin:16px 0}
+.lib-search .lucide{color:var(--faint);flex-shrink:0}
+.lib-search input{flex:1;background:none;border:none;outline:none;padding:13px 0;font-size:14px;color:var(--ink)}
+.lib-search input::placeholder{color:var(--faint)}
+.lib-row{border-top:1px solid var(--line);cursor:pointer}
+.lib-row:last-child{border-bottom:1px solid var(--line)}
+.lib-row:hover .lr-t{color:var(--red)}
+.lr-h{display:grid;grid-template-columns:1fr auto auto;gap:16px;align-items:center;padding:16px 4px}
+.lr-t{font-size:16px;font-weight:600;color:var(--ink);transition:.2s}
+.lr-cat{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--dim);border:1px solid var(--line);padding:3px 8px}
+.lr-chev{color:var(--faint);transition:.25s}
+.lib-row.open .lr-chev{transform:rotate(180deg);color:var(--red)}
+.lr-body{display:none;padding:2px 4px 20px}
+.lib-row.open .lr-body{display:block}
+.lr-desc{color:var(--dim);font-size:13.5px;margin-bottom:14px;max-width:70ch}
+.lr-acts{display:flex;gap:8px;margin-top:12px}
+#drawer{position:fixed;top:0;right:0;bottom:0;width:min(430px,100vw);background:var(--panel);border-left:1px solid var(--line);z-index:1600;transform:translateX(102%);transition:transform .4s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column}
+#drawer.open{transform:translateX(0)}
+.dr-h{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line)}
+.dr-h b{font-family:var(--disp);text-transform:uppercase;font-size:20px;color:var(--ink);letter-spacing:.03em}
+.dr-list{flex:1;overflow-y:auto;padding:10px 22px 30px}
+.take{border:1px solid var(--line);margin:14px 0;padding:14px 16px;background:var(--panel2)}
+.tk-h{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.tk-h b{font-family:var(--mono);font-size:11px;color:var(--red);letter-spacing:.12em}
+.tk-h span{font-family:var(--mono);font-size:9.5px;color:var(--faint)}
+.tk-tool{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin:6px 0 8px}
+.tk-prev{font-family:var(--mono);font-size:11px;color:var(--dim);white-space:pre-wrap;max-height:74px;overflow:hidden;line-height:1.7}
+.tk-acts{display:flex;gap:8px;margin-top:12px}
+.dr-empty{text-align:center;color:var(--faint);padding:70px 20px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;line-height:2}
+#lightbox{position:fixed;inset:0;z-index:1700;background:rgba(5,5,6,.94);display:none;align-items:center;justify-content:center;flex-direction:column;gap:18px;padding:30px}
+#lightbox.open{display:flex}
+#lightbox img{max-width:min(92vw,1100px);max-height:74vh;border:1px solid var(--line)}
+.lb-bar{display:flex;align-items:center;gap:14px}
+.lb-tc{font-family:var(--mono);font-size:12px;color:var(--red);letter-spacing:.1em}
+#toasts{position:fixed;right:22px;bottom:22px;z-index:2000;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+.toast{display:flex;align-items:center;gap:12px;background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--red);padding:13px 18px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink);text-transform:uppercase;animation:tin .35s cubic-bezier(.2,.8,.2,1);max-width:min(420px,86vw)}
+.toast .lucide{color:var(--red);flex-shrink:0}
+.toast.bye{animation:tout .3s forwards}
+@keyframes tin{from{transform:translateY(16px);opacity:0}}
+@keyframes tout{to{transform:translateY(10px);opacity:0}}
+@media (max-width:1080px){
+  #hero .wrap{grid-template-columns:1fr;gap:40px}
+  .row-head{grid-template-columns:50px 1fr 44px}
+  .row-cat,.row-badge{display:none}
+  .row-desc{padding-left:0;flex-direction:column;align-items:flex-start}
+  #stageGrid{grid-template-columns:400px 1fr}
+  .rail{display:none}
+}
+@media (max-width:980px){
+  #stageGrid{grid-template-columns:1fr}
+  #stageForm,#stageOut{height:100%}
+  #stageOut{position:absolute;inset:0;transform:translateX(100%);transition:transform .35s cubic-bezier(.2,.8,.2,1);background:var(--bg);z-index:3}
+  #stageGrid.tab-out #stageOut{transform:translateX(0)}
+  .mtabs{display:flex;position:sticky;bottom:0;z-index:10;border-top:1px solid var(--line);background:var(--panel)}
+  .mtabs button{flex:1;padding:15px;font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+  .mtabs button.on{color:var(--red);background:rgba(255,62,46,.07);box-shadow:inset 0 3px 0 var(--red)}
+  .st-hint{display:none}
+}
+@media (max-width:640px){
+  #hdr{padding:0 16px;gap:12px}
+  .hdr-crumb{display:none}
+  .wrap{padding:0 16px}
+  #stageForm{padding:20px 16px 60px}
+  #stageOut{padding:20px 16px 70px}
+  .row-name{font-size:clamp(24px,8vw,34px)}
+  .b-kv{grid-template-columns:1fr;gap:0}
+  .out-head{position:static}
+  .si-head{grid-template-columns:86px 1fr;row-gap:8px}
+  .si-dur{display:none}
+  .si-head img{width:86px}
+}
+@media (hover:none){.xh{display:none!important}}
+
+/* ============ KREDIT ============ */
+#credit{border-top:1px solid var(--line);padding:36px 0 44px}
+#credit .wrap{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+.cr-brand{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--faint);text-transform:uppercase}
+.cr-brand b{color:var(--dim);font-weight:500}
+.cr-dev{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;text-decoration:none;border:1px solid var(--line);padding:10px 18px;transition:.2s;background:var(--panel)}
+.cr-dev:hover{border-color:var(--red);color:var(--red)}
+.cr-dev .lucide{width:15px;height:15px}
+@media (max-width:640px){#credit .wrap{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+
+<div id="intro">
+  <div class="in-circle">
+    <div class="in-sweep"></div>
+    <div class="in-cross-h"></div><div class="in-cross-v"></div>
+    <div id="inNum">3</div>
+  </div>
+  <div class="in-tag">PABRIK—AI · DEVELOPED BY HIJRAH45 · SYNC PICTURES START</div>
+  <div class="in-skip">KLIK UNTUK LEWATI</div>
+</div>
+
+<div id="grain"></div>
+<div id="wipe"></div>
+
+<header id="hdr">
+  <button class="logo" id="btnHome">PABRIK<em>—</em>AI <small>TOOLKIT v2.0</small></button>
+  <span class="hdr-crumb" id="crumb">INDEKS MODUL</span>
+  <div class="hdr-right">
+    <span class="rec-dot" id="recDot"></span>
+    <span class="tc mono" id="tc">TC 00:00:<b>00:00</b></span>
+    <span class="fps mono">24 FPS</span>
+    <button class="icon-btn" id="btnHist" title="Riwayat take"><i data-lucide="history"></i><span class="take-count" id="takeCount">0</span></button>
+  </div>
+</header>
+
+<main id="viewIndex">
+  <section id="hero">
+    <div class="xh xh-v" id="xhV"></div><div class="xh xh-h" id="xhH"></div>
+    <div class="xh xh-dot" id="xhD"></div><div class="xh xh-tag" id="xhT">X:0000 Y:0000</div>
+    <div class="wrap">
+      <div>
+        <div class="kicker">Toolkit produksi konten — edisi terbaru</div>
+        <h1>AI TOOLS<br><span class="ghost">H45LABS</span></h1>
+        <p class="hero-sub">Dua belas modul produksi — dari merakit karakter AI sampai membedah video kompetitor. Karakter, gambar, influencer, UGC, drama pendek, music clip, prompt, sampai ekstraksi frame. Semua diproses lokal di browser kamu: tanpa server, tanpa upload, tanpa menunggu.</p>
+        <div class="hero-cta">
+          <button class="btn btn-red" id="ctaBrowse"><i data-lucide="arrow-down"></i>JELAJAH 12 MODUL</button>
+          <button class="btn" data-open="lib"><i data-lucide="terminal"></i>PROMPT SIAP PAKAI</button>
+        </div>
+      </div>
+      <aside class="data-card">
+        <div class="dc-tc mono" id="heroTc">00:00:00:00</div>
+        <div class="dc-tc-l">Timecode berjalan — semua sistem normal</div>
+        <div class="dc-row"><span>Modul</span><b>12 AKTIF</b></div>
+        <div class="dc-row"><span>Kategori</span><b>4 GRUP</b></div>
+        <div class="dc-row"><span>Mode proses</span><b>100% LOKAL</b></div>
+        <div class="dc-row"><span>Riwayat take</span><b id="dcTakes">0 TERARSIP</b></div>
+        <div class="dc-row"><span>Format prompt</span><b>MJ · SDXL · FLUX</b></div>
+        <div class="dc-row"><span>Developer</span><a href="https://github.com/h45labs" target="_blank" rel="noopener">
+        <i data-lucide="github"></i><b>HijraH45</b></a></div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="legend">
+    <div class="wrap">
+      <div class="lg"><b>A</b> KARAKTER — 01·02·03</div>
+      <div class="lg"><b>B</b> GAMBAR &amp; PROMPT — 04·09</div>
+      <div class="lg"><b>C</b> KONTEN &amp; PROMOSI — 05·06·11</div>
+      <div class="lg"><b>D</b> VIDEO &amp; EKSTRAKSI — 07·08·10·12</div>
+    </div>
+  </section>
+
+  <section id="modul"><div class="wrap" id="modulList"></div></section>
+    <footer id="credit">
+    <div class="wrap">
+      <div class="cr-brand">PABRIK—AI · TOOLKIT v2.0 · <b>SEMUA PROSES LOKAL DI BROWSER</b></div>
+      <a class="cr-dev" href="https://github.com/h45labs" target="_blank" rel="noopener">
+        <i data-lucide="github"></i>DEVELOPED BY HijraH45
+      </a>
+    </div>
+  </footer>
+</main>
+
+<main id="viewStage" hidden>
+  <div class="st-top">
+    <button class="btn" id="btnBack"><i data-lucide="arrow-left"></i>INDEKS</button>
+    <div class="st-title" id="stTitle"></div>
+    <span class="st-hint">ESC — kembali ke indeks</span>
+  </div>
+  <div id="stageGrid">
+    <div class="rail"></div>
+    <div id="stageForm"></div>
+    <div id="stageOut"></div>
+  </div>
+  <div class="mtabs">
+    <button id="mtForm" class="on">PARAMETER</button>
+    <button id="mtOut">HASIL</button>
+  </div>
+</main>
+
+<aside id="drawer">
+  <div class="dr-h"><b>RIWAYAT TAKE</b><button class="icon-btn" id="drClose"><i data-lucide="x"></i></button></div>
+  <div class="dr-list" id="drList"></div>
+</aside>
+
+<div id="lightbox">
+  <img id="lbImg" alt="frame">
+  <div class="lb-bar">
+    <span class="lb-tc" id="lbTc"></span>
+    <button class="btn btn-red" id="lbDl"><i data-lucide="download"></i>UNDUH FRAME</button>
+    <button class="icon-btn" id="lbClose"><i data-lucide="x"></i></button>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script>
+/* ============ UTIL ============ */
+function $(s){return document.querySelector(s);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function randOf(a){return a[Math.floor(Math.random()*a.length)];}
+function rnd(a,b){return Math.floor(a+Math.random()*(b-a+1));}
+function pad(n){return String(n).padStart(2,'0');}
+function icons(){if(window.lucide&&lucide.createIcons){lucide.createIcons();}}
+
+/* ============ BANK DATA ============ */
+var NAMES=['Kirana','Arka','Nadia','Dimas','Sekar','Reza','Larissa','Bagas','Melati','Yudha','Anindya','Galang','Citra','Fajar','Ayla','Raka'];
+function O(l,en,v){return {l:l,en:en||l,v:(v!==undefined?v:l)};}
+var GENDERS=[O('Pria','man'),O('Wanita','woman'),O('Non-biner','androgynous person')];
+var PFS=[O('TikTok'),O('Instagram Reels'),O('YouTube Shorts')];
+var PFSA=PFS.concat([O('Feed statis')]);
+var ETH=[['Jawa','Javanese Indonesian features, warm tan skin, soft dark brown eyes'],['Sunda','Sundanese Indonesian features, golden-tan skin, bright warm eyes'],['Batak','Batak Indonesian features, strong bone structure, deep-set expressive eyes'],['Minang','Minang Indonesian features, elegant oval face, luminous brown skin'],['Cina-Indonesia','Chinese-Indonesian features, fair warm-toned skin, sleek jawline'],['Blasteran Asia','mixed pan-Asian heritage, soft Eurasian features, light golden skin'],['Asia Timur','East Asian features, porcelain-warm skin, clean sharp jawline'],['Asia Tenggara','Southeast Asian features, sun-kissed tan skin, warm expressive eyes'],['Kaukasia','Caucasian features, fair skin with subtle freckles, sculpted cheekbones'],['Timur Tengah','Middle Eastern features, olive skin, thick dark brows, amber eyes'],['Amerika Latin','Latino features, warm bronze skin, sculpted features, magnetic dark eyes'],['Asia Selatan','South Asian features, rich warm brown skin, striking dark eyes']].map(function(x){return O(x[0],x[1]);});
+var HAIRS=[['Ponytail rapi','sleek high ponytail'],['Layer panjang bergelombang','long wavy layered hair'],['Buzz cut','clean buzz cut'],['Curly + fade','voluminous curls with a mid fade'],['Bob poni lurus','blunt straight bob with full bangs'],['Undercut slicked-back','slicked-back undercut'],['Pixie bertekstur','textured pixie cut'],['Top knot','tight top knot'],['Bahu wavy','shoulder-length tousled waves'],['Wolf cut','shaggy wolf cut']].map(function(x){return O(x[0],x[1]);});
+var HAIRC=[['Hitam pekat','jet-black'],['Cokelat espresso','espresso-brown'],['Highlight madu','dark brown with honey highlights'],['Kilau biru','black with subtle blue sheen'],['Mahogany','rich mahogany'],['Platinum abu','platinum ash-blonde'],['Burgundy','deep burgundy']].map(function(x){return O(x[0],x[1]);});
+var OUTFITS=[['Streetwear: hoodie + cargo','an oversized charcoal hoodie, wide cargo pants and chunky sneakers'],['Linen: kemeja putih longgar','a loose white linen shirt with rolled sleeves, beige trousers'],['Monokrom kantor: blazer + turtleneck','a black turtleneck under a tailored grey blazer'],['Dress floral musim panas','a flowing summer floral dress with thin straps'],['Denim vintage + kaos grafis','a faded vintage denim jacket over a graphic tee, straight jeans'],['Teknisi kreatif: utilitas + headset','a utility jacket, black tee and studio headset around the neck'],['Kebaya modern batik','a modern kebaya in deep batik tones with intricate patterns'],['Athleisure monokrom','a monochrome athleisure set, cropped top and high-waist leggings'],['Three-piece formal','a sharply tailored three-piece navy suit'],['Flanel + kaos putih','a red flannel overshirt over a plain white tee, dark denim']].map(function(x){return O(x[0],x[1]);});
+var EXPS=[['Senyum hangat percaya diri','a warm confident smile'],['Tatapan tajam intens','a sharp intense gaze'],['Kaget natural','a naturally surprised look, brows raised'],['Tertawa lepas','laughing freely, eyes crinkled'],['Melamun ke jauhan','a dreamy faraway gaze'],['Menahan tawa','biting back a playful smile'],['Datar misterius','a calm unreadable expression'],['Berbinar antusias','eyes lit up with excitement']].map(function(x){return O(x[0],x[1]);});
+var LOCS=[['Kafe industrial, sore','an industrial-style cafe with exposed brick and hanging bulbs'],['Kamar neon, malam','a moody bedroom lit by LED neon strips'],['Atap gedung, senja','a city rooftop at dusk with the skyline behind'],['Studio seamless abu','a seamless grey studio backdrop'],['Gang kota pasca hujan','a narrow city alley after rain, reflections on asphalt'],['Taman kota berkabut, pagi','a misty city park in early morning'],['Perpustakaan tua','an old library with tall wooden shelves and warm lamps'],['Pasar tradisional ramai','a bustling traditional market with vivid stalls'],['Garasi workshop','a cluttered creative garage workshop'],['Lorong apartemen minimalis','a minimalist apartment hallway with soft ceiling light']].map(function(x){return O(x[0],x[1]);});
+var LIGHTS=[['Golden hour rim','warm golden-hour rim light'],['Neon magenta-cyan','magenta and cyan neon practicals'],['Softbox lembut','soft diffused softbox lighting'],['Sidelight jendela dramatis','dramatic window sidelight with deep shadows'],['Lampu meja low-key','low-key warm desk lamp with moody falloff'],['Backlight siluet','strong backlight creating a soft silhouette glow'],['Overcast lembut','soft overcast daylight'],['Spotlight tunggal atas','a single overhead spotlight, cinematic pool of light']].map(function(x){return O(x[0],x[1]);});
+var ANGLES=[['Close-up portrait','tight close-up portrait'],['Medium shot','medium shot from chest up'],['Full body','full-body shot'],['Low angle hero','heroic low-angle shot'],['Dutch angle','slight dutch angle'],['Over-the-shoulder','over-the-shoulder framing'],['Profil samping','clean side profile'],['Top-down','top-down overhead angle']].map(function(x){return O(x[0],x[1]);});
+var STYLES=[['Fotorealistis 85mm f/1.4','ultra-realistic photography, 85mm lens, f/1.4 shallow depth of field, natural skin texture'],['Cinematic anamorphic 35mm','cinematic anamorphic still, 35mm, subtle film grain, movie color grade'],['Editorial fashion','high-fashion editorial photography, crisp studio quality, magazine grade'],['Film analog Portra','analog film look, Kodak Portra 400 tones, gentle grain'],['Stylized 3D','stylized 3D character render, subsurface skin, cinematic studio lighting'],['Semi-real anime','semi-realistic anime style, clean linework, painterly shading']].map(function(x){return O(x[0],x[1]);});
+var IMGSTYLES=STYLES.concat([O('Lukis watercolor','loose watercolor painting, wet-on-wet washes, paper texture'),O('Double exposure','double exposure composition, silhouette blended with scenery'),O('Neon malam','neon-noir night photography, wet asphalt reflections')]);
+var MOODS=[['Melankolis','melancholic'],['Epik','epic'],['Hangat nostalgic','warm nostalgic'],['Misterius','mysterious'],['Ceria','cheerful'],['Tenang','calm'],['Romantis','romantic'],['Gritty','gritty']].map(function(x){return O(x[0],x[1]);});
+var TIMES=[['Fajar','at dawn'],['Pagi','in the morning'],['Siang','midday'],['Golden hour','golden hour'],['Senja','at dusk'],['Malam','at night']].map(function(x){return O(x[0],x[1]);});
+var LENSES=[['24mm wide','24mm wide-angle'],['35mm reportase','35mm reportage'],['50mm natural','50mm natural perspective'],['85mm bokeh','85mm portrait with creamy bokeh'],['135mm kompresi','135mm compressed telephoto'],['Makro','macro lens, extreme detail']].map(function(x){return O(x[0],x[1]);});
+var KOMPOS=[['Simetris tengah','centered symmetrical composition'],['Rule of thirds','rule-of-thirds composition'],['Leading lines','strong leading lines'],['Ruang negatif','minimalist negative space'],['Diagonal dinamis','dynamic diagonal composition'],['Frame dalam frame','frame-within-a-frame']].map(function(x){return O(x[0],x[1]);});
+var RATIOS=['9:16','4:5','1:1','16:9','3:2'];
+var PLATFORMS=[{l:'Midjourney v6',v:'mj'},{l:'Stable Diffusion / SDXL',v:'sdxl'},{l:'Flux',v:'flux'},{l:'Umum (natural language)',v:'umum'}];
+var NEG='blurry, low quality, deformed hands, extra fingers, watermark, text, logo, plastic skin, oversaturated, duplicate face, bad anatomy';
+var SDXL_AR={'9:16':'576x1024','4:5':'816x1024','1:1':'1024x1024','16:9':'1024x576','3:2':'1216x832'};
+
+/* ============ REGISTRI 12 MODUL ============ */
+var TOOLS=[
+ {id:'chargen',num:'01',name:'Character Generator',cat:'Karakter',badge:'GEN',grp:'A',
+  desc:'Rakit karakter AI dari nol: gender, etnis, rambut, outfit, ekspresi, lokasi, pencahayaan, sampai angle kamera. Hasilnya master prompt + variasi angle yang siap ditempel ke generator gambar mana pun.'},
+ {id:'clone',num:'02',name:'Character Clone',cat:'Karakter',badge:'GEN',grp:'A',
+  desc:'Unggah gambar referensi — sistem membaca palet warna dominannya secara lokal, lalu menyusun consistency sheet agar karakter yang sama bisa dipakai ulang di berbagai kebutuhan konten.'},
+ {id:'modifier',num:'03',name:'Character Modifier',cat:'Karakter',badge:'GEN',grp:'A',
+  desc:'Ubah outfit, ekspresi, pose, lokasi, dan detail karakter tanpa membuat konsep dari awal. Cukup tempel prompt lama, pilih aspek yang diubah, dapatkan prompt delta + versi gabungan.'},
+ {id:'imagegen',num:'04',name:'Image Generator',cat:'Gambar',badge:'GEN',grp:'B',
+  desc:'Buat berbagai jenis gambar AI lewat pilihan yang sudah disederhanakan: gaya, mood, lensa, komposisi, cahaya. Ada tombol PERKAYA untuk menambah lapisan detail teknis otomatis.'},
+ {id:'influencer',num:'05',name:'AI Influencer Maker',cat:'Konten',badge:'GEN',grp:'C',
+  desc:'Konsep visual AI influencer lengkap dalam satu dokumen: persona, nama & bio, pilar konten, master prompt wajah untuk konsistensi, palet feed, jadwal posting, dan 6 ide konten pembuka.'},
+ {id:'ugc',num:'06',name:'UGC Content',cat:'Konten',badge:'GEN',grp:'C',
+  desc:'Konsep + script konten UGC untuk promosi produk, video jualan, dan affiliate: 3 varian hook, script ber-timecode, shotlist dengan prompt visual, caption, dan hashtag.'},
+ {id:'drama',num:'07',name:'Pabrik Konten — Drama Pendek V2',cat:'Video',badge:'GEN',grp:'D',
+  desc:'Wizard 3 langkah dari ide sampai rangkaian adegan: premis, karakter, struktur. Output-nya production bible mini — logline, character sheet, dan scene breakdown dengan dialog, shot, durasi, dan prompt visual.'},
+ {id:'music',num:'08',name:'Pabrik Konten — Music Clip V2',cat:'Video',badge:'GEN',grp:'D',
+  desc:'Konsep visual dan rangkaian adegan untuk video musik AI: treatment, palet grading, dan shotlist yang dipetakan ke timecode dan BPM — potong tepat di beat.'},
+ {id:'lib',num:'09',name:'Prompt Siap Pakai',cat:'Prompt',badge:'LIB',grp:'B',
+  desc:'32 prompt asli yang bisa langsung dipakai dan dikembangkan: karakter, potret, sinematik, produk, fashion, lanskap, 3D, dan makanan. Cari, filter, salin, atau kirim langsung ke Image Generator.'},
+ {id:'sceneext',num:'10',name:'Scene Extractor',cat:'Ekstraksi',badge:'LIVE',grp:'D',
+  desc:'Bedah video menjadi susunan scene: unggah video, sistem menganalisis perubahan piksel untuk mendeteksi pergantian shot, lalu menampilkan keyframe per scene dengan rentang timecode.'},
+ {id:'ads',num:'11',name:'Ads Maker',cat:'Konten',badge:'GEN',grp:'C',
+  desc:'Konsep dan bahan iklan untuk produk, affiliate, maupun promosi: big idea dari 3 angle psikologis, script ber-timecode, shotlist, headline & copy, plus saran targeting.'},
+ {id:'frameext',num:'12',name:'Frame Extractor',cat:'Ekstraksi',badge:'LIVE',grp:'D',
+  desc:'Ambil frame-frame penting dari video untuk dijadikan gambar referensi, storyboard, atau bahan produksi. Pilih jumlah frame merata atau interval tetap, lalu unduh.'}
+];
+var GRPS=[['A','KARAKTER'],['B','GAMBAR & PROMPT'],['C','KONTEN & PROMOSI'],['D','VIDEO & EKSTRAKSI']];
+var TOOLMAP={};
+TOOLS.forEach(function(t){TOOLMAP[t.id]=t;});
+
+/* ============ SKEMA FORM ============ */
+var SCHEMA={};
+
+SCHEMA.chargen=[
+ {sec:'IDENTITAS'},
+ {key:'nama',type:'text',label:'Nama karakter',ph:'cth: Kirana (kosongkan untuk acak)'},
+ {key:'gender',type:'seg',label:'Gender',opts:GENDERS},
+ {key:'usia',type:'slider',label:'Usia',min:16,max:70,def:24,unit:' th'},
+ {key:'etnis',type:'sel',label:'Etnis',opts:ETH},
+ {sec:'TAMPILAN'},
+ {key:'rgy',type:'sel',label:'Gaya rambut',opts:HAIRS},
+ {key:'rwr',type:'sel',label:'Warna rambut',opts:HAIRC},
+ {key:'outfit',type:'sel',label:'Outfit',opts:OUTFITS},
+ {key:'ekspresi',type:'sel',label:'Ekspresi',opts:EXPS},
+ {sec:'PENDUKUNG'},
+ {key:'lokasi',type:'sel',label:'Lokasi',opts:LOCS},
+ {key:'cahaya',type:'sel',label:'Pencahayaan',opts:LIGHTS},
+ {key:'angle',type:'sel',label:'Angle kamera',opts:ANGLES},
+ {key:'rasio',type:'seg',label:'Rasio',opts:RATIOS.map(function(r){return O(r);})},
+ {key:'gaya',type:'sel',label:'Gaya render',opts:STYLES},
+ {key:'platform',type:'sel',label:'Format output',opts:PLATFORMS}
+];
+
+SCHEMA.clone=[
+ {type:'upload',key:'ref',label:'Gambar referensi'},
+ {sec:'REFERENSI'},
+ {key:'label',type:'text',label:'Label referensi',ph:'cth: Karakter utama akun @senja.kopi'},
+ {key:'fitur',type:'ta',label:'Fitur yang wajib terkunci',ph:'cth: wajah oval, tahi lalat di pipi kanan, rambut ikal sebahu, senyum khas...'},
+ {key:'guna',type:'sel',label:'Tujuan penggunaan',opts:[O('Konten TikTok / Reels harian'),O('Campaign produk / affiliate'),O('Drama pendek / sinematik'),O('Profil & feed influencer')]},
+ {sec:'VARIASI'},
+ {key:'aspek',type:'chips',label:'Aspek yang divariasikan',opts:['Pose','Outfit','Latar','Ekspresi','Aktivitas','Pencahayaan'],def:['Pose','Outfit','Latar']},
+ {key:'platform',type:'sel',label:'Format output',opts:PLATFORMS}
+];
+
+SCHEMA.modifier=[
+ {sec:'BASIS'},
+ {key:'lama',type:'ta',label:'Prompt / deskripsi karakter lama',ph:'Tempel prompt karakter yang sudah ada di sini...'},
+ {key:'platform',type:'sel',label:'Format output',opts:PLATFORMS},
+ {sec:'PERUBAHAN'},
+ {key:'aspek',type:'chips',label:'Aspek yang diubah',opts:['Outfit','Ekspresi','Pose','Lokasi','Detail wajah','Usia','Warna rambut','Aksesori'],def:['Outfit','Ekspresi']},
+ {key:'detil',type:'ta',label:'Detail perubahan',ph:'cth: ganti outfit jadi jas hitam, ekspresi menahan tangis, tetap di lokasi yang sama...'},
+ {key:'kuat',type:'slider',label:'Intensitas perubahan',min:1,max:10,def:6},
+ {key:'lock',type:'seg',label:'Kunci konsistensi wajah',opts:[O('Ya'),O('Tidak')],def:'Ya'}
+];
+
+SCHEMA.imagegen=[
+ {sec:'IDE'},
+ {key:'ide',type:'ta',label:'Ide gambar',ph:'Deskripsikan gambar yang kamu mau, sebebas mungkin...',roll:false},
+ {type:'action',act:'enhance',label:'Perkaya prompt',icon:'sparkles'},
+ {key:'subjek',type:'text',label:'Subjek tambahan',ph:'opsional — objek/orang pelengkap'},
+ {sec:'ARAH VISUAL'},
+ {key:'gaya',type:'sel',label:'Gaya visual',opts:IMGSTYLES},
+ {key:'mood',type:'sel',label:'Mood',opts:MOODS},
+ {key:'waktu',type:'sel',label:'Waktu',opts:TIMES},
+ {key:'lensa',type:'sel',label:'Lensa',opts:LENSES},
+ {key:'komposisi',type:'sel',label:'Komposisi',opts:KOMPOS},
+ {key:'cahaya',type:'sel',label:'Pencahayaan',opts:LIGHTS},
+ {key:'rasio',type:'seg',label:'Rasio',opts:RATIOS.map(function(r){return O(r);})},
+ {key:'neg',type:'text',label:'Negative tambahan',ph:'opsional'},
+ {key:'platform',type:'sel',label:'Format output',opts:PLATFORMS}
+];
+
+SCHEMA.influencer=[
+ {sec:'FONDASI PERSONA'},
+ {key:'niche',type:'sel',label:'Niche',opts:['Kecantikan & skincare','Fashion','Kuliner','Fitness','Teknologi','Travel','Edukasi','Gaming'].map(function(m){return O(m);})},
+ {key:'persona',type:'sel',label:'Persona',opts:['Elegan & minimalis','Ceria & ekspresif','Teman sebelah (relatable)','Luxury & aspiratif','Edgy street','Kalem & informatif'].map(function(m){return O(m);})},
+ {key:'gender',type:'seg',label:'Gender',opts:[GENDERS[0],GENDERS[1]],def:'woman'},
+ {key:'usia',type:'slider',label:'Usia persona',min:19,max:40,def:23,unit:' th'},
+ {key:'nama',type:'text',label:'Nama persona',ph:'kosongkan untuk dibuatkan otomatis',roll:false},
+ {sec:'PLATFORM & BAHASA'},
+ {key:'pf',type:'sel',label:'Platform utama',opts:PFS},
+ {key:'tone',type:'sel',label:'Tone bahasa',opts:['Santai kayak ngobrol','Lucus & penuh canda','Tegas & to the point','Puitis ringan','Informatif rapi'].map(function(m){return O(m);})},
+ {key:'vibe',type:'sel',label:'Vibe visual feed',opts:['Netral hangat','Monokrom editorial','Pop cerah','Pastel lembut','Gelap sinematik','Earthy bohemian'].map(function(m){return O(m);})}
+];
+
+SCHEMA.ugc=[
+ {sec:'PRODUK'},
+ {key:'produk',type:'text',label:'Nama produk',ph:'cth: serum glowing XYZ'},
+ {key:'kategori',type:'sel',label:'Kategori',opts:['Skincare','Makeup','Fashion','Makanan & minuman','Gadget','Peralatan rumah','Jasa & aplikasi','Kesehatan'].map(function(m){return O(m);})},
+ {key:'masalah',type:'ta',label:'Masalah yang diselesaikan',ph:'cth: kulit kusam dan tidak merata walau sudah cuci muka rutin...'},
+ {key:'audiens',type:'sel',label:'Target audiens',opts:['Remaja 16–22','Dewasa muda 22–30','Ibu muda','Pekerja sibuk','Anak kos','Penggemar hemat belanja'].map(function(m){return O(m);})},
+ {sec:'FORMAT'},
+ {key:'pf',type:'sel',label:'Platform',opts:PFS},
+ {key:'durasi',type:'seg',label:'Durasi',opts:['15s','30s','60s'].map(function(r){return O(r);}),def:'30s'},
+ {key:'tone',type:'sel',label:'Tone',opts:['Jujur & apa adanya','Hyped & cepat','Kalem & informatif','Komedi relatable','Semi-formal profesional'].map(function(m){return O(m);})},
+ {key:'gaya',type:'sel',label:'Gaya bicara',opts:['Sehari-hari banget','Semi-formal','Penuh antusias','Berbisik intim','Deadpan datar'].map(function(m){return O(m);})}
+];
+
+SCHEMA.drama=[
+ {step:1,sec:'LANGKAH 1 — IDE'},
+ {step:1,key:'genre',type:'sel',label:'Genre',opts:[['Drama keluarga','warm family drama'],['Komedi romantis','romantic comedy'],['Misteri','moody mystery'],['Thriler','tense psychological thriller'],['Fantasi urban','grounded urban fantasy'],['Slice of life','gentle slice-of-life']].map(function(x){return O(x[0],x[1]);})},
+ {step:1,key:'tone',type:'sel',label:'Tone',opts:[['Hangat & haru','warm heartfelt'],['Gelap & intens','dark and intense'],['Ringan & menghibur','light and entertaining'],['Menggantung','suspenseful'],['Puitis','poetic']].map(function(x){return O(x[0],x[1]);})},
+ {step:1,key:'durasi',type:'slider',label:'Durasi total',min:30,max:180,def:60,unit:' detik'},
+ {step:1,key:'pf',type:'sel',label:'Platform',opts:PFS},
+ {step:2,sec:'LANGKAH 2 — KARAKTER'},
+ {step:2,key:'mc',type:'text',label:'Tokoh utama',ph:'default: Kira'},
+ {step:2,key:'role',type:'text',label:'Peran / profesi',ph:'default: barista paruh waktu'},
+ {step:2,key:'foe',type:'text',label:'Tokoh penentang (opsional)',ph:'default: orang yang paling meremehkannya'},
+ {step:2,key:'relasi',type:'sel',label:'Orang terdekat',opts:['Sahabat lama','Adik/bunda','Rekan kerja','Tetangga','Mentor tak terduga'].map(function(m){return O(m);})},
+ {step:3,sec:'LANGKAH 3 — STRUKTUR'},
+ {step:3,key:'tpl',type:'sel',label:'Template cerita',opts:[O('Underdog — dari bawah ke puncak'),O('Plot twist — terbalik di menit terakhir'),O('Salah paham — komedi romantis'),O('Rahasia keluarga — retak dan rekonsiliasi')]},
+ {step:3,key:'jml',type:'slider',label:'Jumlah scene',min:4,max:10,def:6},
+ {step:3,key:'twist',type:'seg',label:'Sisipkan twist ekstra',opts:[O('Ya'),O('Tidak')],def:'Ya'},
+ {step:3,key:'latar',type:'text',label:'Latar tempat',ph:'default: kota kecil di pinggir Jakarta'}
+];
+
+SCHEMA.music=[
+ {sec:'LAGU'},
+ {key:'judul',type:'text',label:'Judul lagu',ph:'cth: Senja di Jendela'},
+ {key:'genre',type:'sel',label:'Genre',opts:[['Pop melankolis','melancholic pop'],['R&B','R&B'],['Hip-hop','hip-hop'],['EDM','EDM'],['Indie folk','indie folk'],['Rock alternatif','alternative rock']].map(function(x){return O(x[0],x[1]);})},
+ {key:'mood',type:'sel',label:'Mood',opts:MOODS},
+ {key:'durasi',type:'slider',label:'Durasi lagu',min:60,max:240,def:150,unit:' detik'},
+ {key:'bpm',type:'slider',label:'Tempo',min:60,max:180,def:92,unit:' BPM'},
+ {sec:'KONSEP VISUAL'},
+ {key:'konsep',type:'sel',label:'Konsep',opts:[O('Performa + naratif','perf-nar'),O('One-take mengalir','one-take'),O('Metafora visual','metaphor'),O('Storyline sinematik','story')]},
+ {key:'tokoh',type:'text',label:'Tokoh utama',ph:'cth: vokalis wanita berjaket denim'},
+ {key:'lokasi',type:'text',label:'Lokasi utama',ph:'cth: gang kota malam hujan'},
+ {key:'jml',type:'slider',label:'Jumlah shot',min:6,max:16,def:10},
+ {key:'grading',type:'sel',label:'Color grading',opts:['Teal & orange','Bleach bypass','Monokrom kontras','Warm nostalgic','Neon malam','Desaturated dingin'].map(function(m){return O(m);})}
+];
+
+SCHEMA.ads=[
+ {sec:'PRODUK & TUJUAN'},
+ {key:'brand',type:'text',label:'Produk / brand',ph:'cth: kopi literan KOPIKITA'},
+ {key:'jenis',type:'sel',label:'Jenis',opts:['Produk fisik','Jasa','Aplikasi / digital','Affiliate','Event','Personal branding'].map(function(m){return O(m);})},
+ {key:'tujuan',type:'sel',label:'Tujuan iklan',opts:['Awareness','Konversi / penjualan','Traffic ke link'].map(function(m){return O(m);})},
+ {key:'offer',type:'text',label:'Offer / CTA khusus',ph:'cth: diskon 40% 3 hari pertama'},
+ {sec:'AUDIENS'},
+ {key:'audiens',type:'text',label:'Target audiens',ph:'cth: pekerja kantoran umur 25–35'},
+ {key:'pain',type:'ta',label:'Pain point audiens',ph:'cth: ngantuk berat tiap sore tapi bosan sama kopi instan...'},
+ {sec:'FORMAT'},
+ {key:'pf',type:'sel',label:'Platform',opts:PFSA},
+ {key:'durasi',type:'seg',label:'Durasi video',opts:['15s','30s','60s','—'].map(function(r){return O(r);}),def:'30s'},
+ {key:'gaya',type:'sel',label:'Gaya iklan',opts:['Problem–solution','Testimoni','Before–after','Demo produk','Sketsa komedi','Day in the life','POV relatable'].map(function(m){return O(m);})},
+ {key:'tone',type:'sel',label:'Tone',opts:['Jujur & apa adanya','Hyped & cepat','Kalem premium','Komedi relatable','FOMO menggiurkan'].map(function(m){return O(m);})}
+];
+
+/* ============ DOKUMEN OUTPUT ============ */
+var PCM=new Map(),pcSeq=0;
+function makeDoc(){
+  var H=[],T=[];
+  var api={};
+  api.h=function(t){H.push('<div class="b-h"><span>'+t+'</span></div>');T.push('\n== '+t+' ==\n');};
+  api.p=function(t){H.push('<p class="b-p">'+t+'</p>');T.push(t+'\n');};
+  api.kv=function(list){
+    var h='';
+    list.forEach(function(kv){h+='<div class="k">'+kv[0]+'</div><div class="v">'+kv[1]+'</div>';});
+    H.push('<div class="b-kv">'+h+'</div>');
+    var t='';
+    list.forEach(function(kv){t+=kv[0]+': '+kv[1]+'\n';});
+    T.push(t);
+  };
+  api.prompt=function(title,body,foot){
+    var id='pc'+(pcSeq++);PCM.set(id,{title:title,body:body});
+    var h='<div class="b-prompt"><div class="bp-top"><span class="bp-title">'+title+'</span><button class="mini-btn copy" data-copy="'+id+'"><i data-lucide="copy"></i>SALIN</button></div><pre>'+esc(body)+'</pre>';
+    if(foot){h+='<div class="bp-foot">'+foot+'</div>';}
+    h+='</div>';
+    H.push(h);T.push('['+title+']\n'+body+'\n');
+  };
+  api.list=function(items){
+    var h='';items.forEach(function(i){h+='<li>'+i+'</li>';});
+    H.push('<ul class="b-list">'+h+'</ul>');
+    var t='';items.forEach(function(i){t+=i.replace(/<[^>]+>/g,'')+'\n';});
+    T.push(t);
+  };
+  api.note=function(t){H.push('<div class="b-note">'+t+'</div>');T.push('CATATAN: '+t.replace(/<[^>]+>/g,'')+'\n');};
+  api.pal=function(colors){
+    var h='';colors.forEach(function(c){h+='<div class="sw"><i style="background:'+c+'"></i><span>'+c+'</span></div>';});
+    H.push('<div class="b-pal">'+h+'</div>');T.push('PALET: '+colors.join(' ')+'\n');
+  };
+  api.scene=function(head,rows,tag){
+    var h='<div class="b-scene"><div class="bs-head"><b>'+head+'</b>'+(tag?'<span>'+tag+'</span>':'')+'</div><div class="bs-body">';
+    rows.forEach(function(r){h+='<div class="bs-row"><div class="k">'+r[0]+'</div><div class="v">'+r[1]+'</div></div>';});
+    h+='</div></div>';
+    H.push(h);
+    var t=head+'\n';
+    rows.forEach(function(r){t+=r[0]+': '+String(r[1]).replace(/<[^>]+>/g,'')+'\n';});
+    T.push(t);
+  };
+  api.finish=function(){return {html:H.join(''),text:T.join('\n')};};
+  return api;
+}
+function fmtMaster(parts,ratio,platform){
+  var base=parts.filter(Boolean).join(', ');
+  if(platform==='mj'){return base+' --ar '+ratio+' --style raw --v 6.0';}
+  if(platform==='sdxl'){return base+', '+(SDXL_AR[ratio]||'1024x1024')+' render';}
+  if(platform==='flux'){return base.charAt(0).toUpperCase()+base.slice(1)+'. The composition feels natural and unforced, '+ratio+' aspect ratio.';}
+  return base+' — rasio '+ratio+'.';
+}
+function label(opts,v){for(var i=0;i<opts.length;i++){if(opts[i].v===v)return opts[i].l;}return v;}
+function en(opts,v){for(var i=0;i<opts.length;i++){if(opts[i].v===v)return opts[i].en;}return v;}
+function fmtTC(sec){
+  sec=Math.max(0,sec||0);
+  var h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=Math.floor(sec%60),f=Math.floor((sec%1)*24);
+  return pad(h)+':'+pad(m)+':'+pad(s)+':'+pad(f);
+}
+
+/* ============ STATE & FORM ENGINE ============ */
+var CUR=null,S={},curDoc=null,lastSaved='';
+function defaults(id){
+  var d={};(SCHEMA[id]||[]).forEach(function(f){
+    if(!f.key)return;
+    if(f.type==='seg'||f.type==='sel'){d[f.key]=(f.def!==undefined?f.def:f.opts[0].v);}
+    else if(f.type==='slider'){d[f.key]=(f.def!==undefined?f.def:f.min);}
+    else if(f.type==='chips'){d[f.key]=f.def?f.def.slice():[];}
+    else if(f.type==='text'||f.type==='ta'){d[f.key]='';}
+  });
+  return d;
+}
+function fieldHTML(f){
+  var lab=function(extra){return '<label class="f-label"><span>'+f.label+'</span>'+(extra||'')+'</label>';};
+  if(f.sec){return '<div class="f-sec">'+(f.step?('LANGKAH '+f.step+'/3 · '):'')+f.sec+'</div>';}
+  if(f.type==='upload'){
+    return '<div class="field">'+lab()+'<div class="drop" data-drop="'+f.key+'"><i data-lucide="image-up"></i><b>LEPAS GAMBAR DI SINI</b><span>atau klik untuk memilih file — diproses lokal, tidak diunggah</span></div><input type="file" accept="image/*" hidden data-up="'+f.key+'"><div id="upPrev"></div></div>';
+  }
+  if(f.type==='action'){
+    return '<div class="field"><button type="button" class="btn" data-act="'+f.act+'" style="width:100%;justify-content:center"><i data-lucide="'+(f.icon||'wand-2')+'"></i>'+f.label.toUpperCase()+'</button></div>';
+  }
+  if(f.type==='text'){
+    return '<div class="field">'+lab()+'<input class="f-in" type="text" data-key="'+f.key+'" value="'+esc(S[f.key])+'" placeholder="'+esc(f.ph||'')+'"></div>';
+  }
+  if(f.type==='ta'){
+    return '<div class="field">'+lab()+'<textarea class="f-ta" data-key="'+f.key+'" placeholder="'+esc(f.ph||'')+'">'+esc(S[f.key])+'</textarea></div>';
+  }
+  if(f.type==='sel'){
+    var o='';f.opts.forEach(function(x){o+='<option value="'+esc(x.v)+'"'+(S[f.key]===x.v?' selected':'')+'>'+esc(x.l)+'</option>';});
+    return '<div class="field">'+lab()+'<div class="f-sel"><select data-key="'+f.key+'">'+o+'</select><i data-lucide="chevron-down"></i></div></div>';
+  }
+  if(f.type==='seg'){
+    var o2='';f.opts.forEach(function(x){o2+='<button type="button" class="seg-b'+(S[f.key]===x.v?' on':'')+'" data-v="'+esc(x.v)+'">'+esc(x.l)+'</button>';});
+    return '<div class="field">'+lab()+'<div class="seg" data-key="'+f.key+'">'+o2+'</div></div>';
+  }
+  if(f.type==='chips'){
+    var o3='';f.opts.forEach(function(x){
+      var v=(typeof x==='string')?x:x.v;
+      var l=(typeof x==='string')?x:x.l;
+      o3+='<button type="button" class="chip'+(S[f.key].indexOf(v)>=0?' on':'')+'" data-v="'+esc(v)+'">'+esc(l)+'</button>';
+    });
+    return '<div class="field">'+lab('<span class="f-hint">boleh pilih beberapa</span>')+'<div class="chips" data-key="'+f.key+'">'+o3+'</div></div>';
+  }
+  if(f.type==='slider'){
+    return '<div class="field">'+lab('<span class="sl-v">'+S[f.key]+(f.unit||'')+'</span>')+'<div class="sl"><input type="range" data-key="'+f.key+'" min="'+f.min+'" max="'+f.max+'" step="'+(f.step||1)+'" value="'+S[f.key]+'"></div></div>';
+  }
+  return '';
+}
+function refPrevHTML(){
+  if(!S._refURL)return '';
+  var pal='';
+  (S._pal||[]).forEach(function(h){pal+='<i style="background:'+h+'" title="'+h+'"></i>';});
+  return '<div class="up-prev"><img src="'+S._refURL+'" alt="ref"><div style="flex:1"><div class="mono" style="font-size:10px;color:var(--dim);letter-spacing:.08em">'+esc(S._refName||'')+' — '+esc(S._refDim||'')+'</div><div class="pal-prev">'+pal+'</div></div></div>';
+}
+var outQueued=false;
+function scheduleOut(){
+  if(outQueued)return;outQueued=true;
+  requestAnimationFrame(function(){outQueued=false;renderOut();});
+}
+function renderForm(){
+  if(!CUR)return;
+  if(CUR.id==='lib'){renderLibForm();return;}
+  if(CUR.id==='sceneext'||CUR.id==='frameext'){renderVideoForm();return;}
+  var sch=SCHEMA[CUR.id]||[];
+  var html='';
+  if(CUR.id==='drama'){
+    var st=S._step||1;
+    var ind='';[1,2,3].forEach(function(i){ind+='<i class="'+(i<=st?'on':'')+'"></i>';});
+    html+='<div class="stepind">'+ind+'</div>';
+    sch.forEach(function(f){if(!f.step||f.step===st){html+=fieldHTML(f);}});
+    html+='<div class="stepnav">';
+    if(st>1){html+='<button type="button" class="btn" data-step="'+(st-1)+'"><i data-lucide="arrow-left"></i>KEMBALI</button>';}
+    if(st<3){html+='<button type="button" class="btn btn-red" data-step="'+(st+1)+'" style="margin-left:auto">LANJUT<i data-lucide="arrow-right"></i></button>';}
+    else{html+='<button type="button" class="btn btn-red" data-step="3" data-golive="1" style="margin-left:auto"><i data-lucide="check"></i>RENDER HASIL</button>';}
+    html+='</div>';
+  }else{
+    sch.forEach(function(f){html+=fieldHTML(f);});
+  }
+  if(CUR.build){
+    html+='<div class="stepnav"><button type="button" class="btn" data-act="roll" style="flex:1;justify-content:center"><i data-lucide="dices"></i>ROLL — ACAK SEMUA PARAMETER</button></div>';
+  }
+  $('#stageForm').innerHTML=html;
+  if(CUR.id==='clone'){var up=$('#upPrev');if(up)up.innerHTML=refPrevHTML();}
+  icons();
+}
+function renderOut(){
+  if(!CUR)return;
+  if(CUR.paint){CUR.paint();return;}
+  if(!CUR.build)return;
+  PCM=new Map();pcSeq=0;
+  var d=makeDoc();CUR.build(S,d);
+  curDoc=d.finish();
+  var acts='<div class="out-actions">'+
+    '<button class="mini-btn" data-doc="copy"><i data-lucide="copy"></i>SALIN SEMUA</button>'+
+    '<button class="mini-btn" data-doc="dl"><i data-lucide="download"></i>UNDUH .TXT</button>'+
+    '<button class="mini-btn" data-doc="save"><i data-lucide="bookmark"></i>SIMPAN TAKE</button></div>';
+  $('#stageOut').innerHTML='<div class="out-head"><div><div class="out-title"><em style="font-style:normal;color:var(--red)">'+CUR.num+'</em>'+CUR.name+'</div>'+
+    '<div class="out-meta">TAKE #'+(getTakes().length+1)+' · '+new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})+' · LIVE RENDER</div></div>'+acts+'</div>'+
+    '<div class="doc">'+curDoc.html+'</div>';
+  icons();
+}
+
+/* ============ ROLL & PERKAYA ============ */
+function doRoll(){
+  if(!CUR||!SCHEMA[CUR.id])return;
+  rec(true);var n=0;
+  var iv=setInterval(function(){
+    n++;
+    SCHEMA[CUR.id].forEach(function(f){
+      if(!f.key||f.roll===false||f.type==='ta')return;
+      if(f.type==='text'){
+        if(f.ph&&f.ph.indexOf('default')===0)return;
+        if(f.key==='nama'){S[f.key]=randOf(NAMES);return;}
+        if(CUR.id==='music'){
+          if(f.key==='judul'){S[f.key]=randOf(['Senja di Jendela','Kota yang Tak Tidur','Langit Kertas','Detik ke Nol','Sepuluh Menit Terakhir']);return;}
+          if(f.key==='tokoh'){S[f.key]=randOf(['vokalis wanita berjaket denim','penari pria berhoodie hitam','gitaris berkacamata','penyanyi berambut merah']);return;}
+          if(f.key==='lokasi'){S[f.key]=randOf(LOCS).l;return;}
+        }
+        return;
+      }
+      if(f.type==='seg'||f.type==='sel'){S[f.key]=randOf(f.opts).v;}
+      else if(f.type==='slider'){S[f.key]=rnd(f.min,f.max);}
+      else if(f.type==='chips'){
+        var all=f.opts.map(function(o){return (typeof o==='string')?o:o.v;});
+        all.sort(function(){return Math.random()-.5;});
+        S[f.key]=all.slice(0,rnd(2,3));
+      }
+    });
+    renderForm();renderOut();
+    if(n>=7){clearInterval(iv);rec(false);toast('PARAMETER DIACAK — KONSEP BARU','dices');}
+  },55);
+}
+function enhanceIdea(){
+  var bank=['volumetric atmosphere','subtle film grain','catchlights in the eyes','soft haze in the background','micro-detail on skin texture','rim separation from background','practical light sources in frame','gentle depth falloff','color-graded shadows','environmental dust particles'];
+  var add=bank.slice().sort(function(){return Math.random()-.5;}).slice(0,3);
+  S.ide=(S.ide?S.ide.trim().replace(/[.,\s]+$/,'')+', ':'')+add.join(', ');
+  renderForm();renderOut();toast('PROMPT DIPERKAYA +3 LAPIS DETAIL','sparkles');
+}
+
+/* ============ LISTENER FORM ============ */
+ $('#stageForm').addEventListener('input',function(e){
+  if(!CUR)return;
+  var k=e.target.getAttribute('data-key');if(!k)return;
+  var sch=SCHEMA[CUR.id]||[];
+  var f=null;
+  for(var i=0;i<sch.length;i++){if(sch[i].key===k){f=sch[i];break;}}
+  if(f){
+    if(f.type==='slider'){
+      S[k]=+e.target.value;
+      var lb=e.target.closest('.field').querySelector('.sl-v');
+      if(lb)lb.textContent=S[k]+(f.unit||'');
+    }else{S[k]=e.target.value;}
+    scheduleOut();
+  }else{
+    if(e.target.type==='range'){
+      S[k]=+e.target.value;
+      var fld=e.target.closest('.field'),lb2=fld&&fld.querySelector('.sl-v');
+      if(lb2)lb2.textContent=S[k]+((k==='fcount'&&S.fmode==='interval')?' detik':'')+(k==='sens'?'/10':'');
+    }else{S[k]=e.target.value;}
+    if(CUR.paint)CUR.paint();
+  }
+});
+ $('#stageForm').addEventListener('click',function(e){
+  if(!CUR)return;
+  var sb=e.target.closest('.seg-b');
+  if(sb){
+    var box=sb.closest('[data-key]'),k=box.getAttribute('data-key');
+    S[k]=sb.getAttribute('data-v');
+    box.querySelectorAll('.seg-b').forEach(function(x){x.classList.toggle('on',x===sb);});
+    if(CUR.id==='frameext'&&k==='fmode'){renderVideoForm();}
+    else{scheduleOut();}
+    return;
+  }
+  var ch=e.target.closest('.chip');
+  if(ch){
+    var box2=ch.closest('[data-key]'),k2=box2.getAttribute('data-key'),v=ch.getAttribute('data-v');
+    var idx=S[k2].indexOf(v);
+    if(idx>=0){S[k2].splice(idx,1);}else{S[k2].push(v);}
+    ch.classList.toggle('on');scheduleOut();return;
+  }
+  var st=e.target.closest('[data-step]');
+  if(st){
+    S._step=+st.getAttribute('data-step');
+    renderForm();
+    if(st.getAttribute('data-golive')){goLiveTab();}
+    return;
+  }
+  var act=e.target.closest('[data-act]');
+  if(act){
+    var a=act.getAttribute('data-act');
+    if(a==='roll'){doRoll();return;}
+    if(a==='enhance'){enhanceIdea();return;}
+    if(a==='detect'){detectScenes();return;}
+    if(a==='extract'){extractFrames();return;}
+  }
+  var drop=e.target.closest('[data-drop]');
+  if(drop){var inp=$('input[data-up="'+drop.getAttribute('data-drop')+'"]');if(inp)inp.click();return;}
+  var vd=e.target.closest('[data-vdrop]');
+  if(vd&&$('#vidFile')){$('#vidFile').click();return;}
+});
+ $('#stageForm').addEventListener('change',function(e){
+  var up=e.target.closest('[data-up]');
+  if(up){
+    var file=e.target.files[0];if(!file)return;
+    var url=URL.createObjectURL(file);
+    var img=new Image();
+    img.onload=function(){
+      try{
+        var c=document.createElement('canvas');
+        var w=48,h=Math.max(1,Math.round(48*img.height/img.width));
+        c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        var d=c.getContext('2d').getImageData(0,0,w,h).data,buckets={};
+        for(var i=0;i<d.length;i+=4){
+          if(d[i+3]<128)continue;
+          var key=(d[i]>>4)+','+(d[i+1]>>4)+','+(d[i+2]>>4);
+          if(!buckets[key])buckets[key]={n:0,r:0,g:0,b:0};
+          buckets[key].n++;buckets[key].r+=d[i];buckets[key].g+=d[i+1];buckets[key].b+=d[i+2];
+        }
+        var top=Object.values(buckets).sort(function(a,b){return b.n-a.n;}).slice(0,5).map(function(b){
+          function hx(v){return Math.round(v/b.n).toString(16).padStart(2,'0');}
+          return '#'+hx(b.r)+hx(b.g)+hx(b.b);
+        });
+        S._pal=top;S._refName=file.name;S._refDim=img.width+'x'+img.height;S._refURL=url;
+        var pv=$('#upPrev');if(pv)pv.innerHTML=refPrevHTML();
+        scheduleOut();toast('REFERENSI TERBACA — PALET DIEKSTRAKSI','palette');
+      }catch(err){toast('GAGAL MEMBACA GAMBAR','x');}
+    };
+    img.src=url;
+    return;
+  }
+  if(e.target.id==='vidFile'&&e.target.files[0]){loadVideo(e.target.files[0]);}
+});
+ $('#stageForm').addEventListener('dragover',function(e){
+  var d=e.target.closest('[data-drop],[data-vdrop]');
+  if(d){e.preventDefault();d.classList.add('over');}
+});
+ $('#stageForm').addEventListener('dragleave',function(e){
+  var d=e.target.closest('[data-drop],[data-vdrop]');
+  if(d)d.classList.remove('over');
+});
+ $('#stageForm').addEventListener('drop',function(e){
+  var d=e.target.closest('[data-drop],[data-vdrop]');
+  if(!d)return;
+  e.preventDefault();d.classList.remove('over');
+  if(d.hasAttribute('data-drop')){
+    var inp=$('input[data-up="'+d.getAttribute('data-drop')+'"]');
+    if(inp){inp.files=e.dataTransfer.files;inp.dispatchEvent(new Event('change',{bubbles:true}));}
+  }else if(e.dataTransfer.files[0]){loadVideo(e.dataTransfer.files[0]);}
+});
+
+/* ============ BUILDER MODUL ============ */
+TOOLMAP.chargen.build=function(s,d){
+  var nm=s.nama||'Karakter';
+  d.h('IDENTITAS KARAKTER');
+  d.kv([['Nama',esc(nm)],['Gender',label(GENDERS,s.gender)],['Usia',s.usia+' tahun'],['Etnis',en(ETH,s.etnis)],['Rambut',label(HAIRS,s.rgy)+' — '+label(HAIRC,s.rwr)],['Outfit',label(OUTFITS,s.outfit)],['Ekspresi',label(EXPS,s.ekspresi)],['Lokasi',label(LOCS,s.lokasi)],['Cahaya',label(LIGHTS,s.cahaya)],['Angle',label(ANGLES,s.angle)],['Render',label(STYLES,s.gaya)]]);
+  d.h('MASTER PROMPT');
+  var base=[en(ANGLES,s.angle)+' of '+nm,'a '+s.usia+'-year-old '+s.gender+' with '+en(ETH,s.etnis),en(HAIRC,s.rwr)+' hair in a '+en(HAIRS,s.rgy),'wearing '+en(OUTFITS,s.outfit),en(EXPS,s.ekspresi),'in '+en(LOCS,s.lokasi),en(LIGHTS,s.cahaya),en(STYLES,s.gaya)];
+  d.prompt('MASTER PROMPT — '+label(PLATFORMS,s.platform),fmtMaster(base,s.rasio,s.platform),'Rasio '+s.rasio+(s.platform==='sdxl'?' → '+SDXL_AR[s.rasio]:''));
+  d.h('VARIASI ANGLE');
+  var alts=ANGLES.filter(function(a){return a.v!==s.angle;}).sort(function(){return Math.random()-.5;}).slice(0,3);
+  var swap=function(a){return base.map(function(p,i){return i===0?a+' of '+nm:p;});};
+  var body='';alts.forEach(function(a,i){body+='#V'+(i+1)+' — '+a.l+'\n'+fmtMaster(swap(a.en),s.rasio,s.platform);if(i<alts.length-1)body+='\n\n';});
+  d.prompt('3 PROMPT TURUNAN',body,'Ganti angle, jaga semua detail lain agar karakter tetap konsisten.');
+  d.h('NEGATIVE PROMPT');
+  d.prompt(s.platform==='mj'?'PARAMETER --no':'NEGATIVE PROMPT',s.platform==='mj'?('--no '+NEG):NEG,'Tempel di kolom negative prompt (SDXL) atau sesuaikan di tool masing-masing.');
+  d.note('Simpan MASTER PROMPT sebagai identitas tetap. Untuk konsistensi antar-gambar, pakai fitur referensi karakter di generator pilihanmu (contoh: <b>--cref</b> di Midjourney, IP-Adapter / PuLID di SDXL, atau referensi Flux Kontext).');
+};
+
+TOOLMAP.clone.build=function(s,d){
+  d.h('CONSISTENCY SHEET');
+  d.kv([['Label referensi',esc(s.label||'—')],['Fitur terkunci',esc(s.fitur||'belum diisi — sebaiknya isi agar lock lebih kuat')],['Tujuan',esc(s.guna)],['Aspek variasi',(s.aspek.length?s.aspek:'—').toString()],['Palet dari gambar',s._pal?s._pal.join(' · '):'belum ada gambar referensi']]);
+  if(s._pal)d.pal(s._pal);
+  var lockBits=[s.fitur,'identical facial structure, same face shape and features','consistent skin tone and hair','keep character identity across variations'];
+  d.h('MASTER PROMPT (LOCK)');
+  var lines=['BASE: photo of the referenced character, '+(s.fitur||'same facial identity as reference image'),'LOCK: '+lockBits.filter(Boolean).join(', ')];
+  if(s._pal)lines.push('PALETTE REFERENCE: '+s._pal.join(', '));
+  lines.push('USAGE CONTEXT: '+s.guna);
+  d.prompt('CHARACTER LOCK PROMPT',lines.join('\n'));
+  d.h('PROMPT VARIASI');
+  var V={Pose:['standing relaxed vs leaning on wall','walking mid-stride candid','sitting cross-legged looking up'],Outfit:['same character, new outfit: smart casual','same character, seasonal streetwear','same character, formal event attire'],Latar:['same character in a new location','same character against seamless studio backdrop','same character at golden hour outdoors'],Ekspresi:['same character, joyful laugh','same character, calm neutral gaze','same character, surprised reaction'],Aktivitas:['same character holding a product','same character working at a desk','same character filming content with phone'],Pencahayaan:['same character under neon practicals','same character in soft window light','same character in dramatic single spotlight']};
+  var picks=s.aspek.filter(function(a){return V[a];});
+  if(picks.length){
+    var out='';
+    picks.forEach(function(a){
+      out+='['+a.toUpperCase()+']\n';
+      V[a].forEach(function(v){out+='• '+v+' — '+(s._pal?('palette '+s._pal[0]+', '):'')+'identical face, '+s.guna.toLowerCase()+'\n';});
+      out+='\n';
+    });
+    d.prompt('VARIASI SIAP PAKAI',out.trim());
+  }else{
+    d.p('Pilih minimal satu aspek variasi di panel kiri untuk menghasilkan prompt turunan.');
+  }
+  d.note('Palet warna dibaca langsung dari gambar kamu di browser — tidak ada file yang diunggah ke mana pun. Gunakan hex ini sebagai acuan grading agar feed terlihat konsisten.');
+};
+
+TOOLMAP.modifier.build=function(s,d){
+  var asp=s.aspek.length?s.aspek:['—'];
+  d.h('ANALISIS PERUBAHAN');
+  d.kv([['Aspek diubah',asp.toString()],['Intensitas',s.kuat+'/10'+(s.kuat>=8?' — perubahan besar, jaga fitur wajah':(s.kuat<=3?' — perubahan halus':' — seimbang'))],['Kunci wajah',s.lock],['Basis',s.lama?('dari prompt lama ('+s.lama.length+' karakter)'):'KOSONG — isi prompt lama dulu']]);
+  d.h('PROMPT DELTA');
+  var delta=['MODIFY ('+asp.join(', ').toLowerCase()+'): '+(s.detil||'…'),'INTENSITY: '+s.kuat+'/10'];
+  if(s.lock==='Ya'){delta.push('PRESERVE: facial identity, face shape, skin tone, hairstyle — must remain the same person');}
+  else{delta.push('PRESERVE: general vibe only');}
+  d.prompt('DELTA PROMPT',delta.join('\n'));
+  d.h('PROMPT GABUNGAN');
+  if(s.lama){
+    var merged=s.lama.trim().replace(/[.,\s]+$/,'')+' — modification: '+(s.detil||'…')+' ('+asp.join(', ').toLowerCase()+', intensity '+s.kuat+'/10)';
+    if(s.lock==='Ya')merged+=', keep the exact same face and identity';
+    d.prompt('FULL PROMPT — SIAP PAKAI',merged);
+  }else{
+    d.p('Tempel prompt karakter lama di panel kiri, dan prompt gabungan akan tersusun otomatis di sini.');
+  }
+  d.h('NEGATIVE PROMPT');
+  d.prompt('NEGATIVE PROMPT',NEG+', altered facial identity, different person, face drift','Wajah "melenceng" adalah masalah paling umum saat modifikasi — negative ini membantu menahannya.');
+  d.note('Tips: untuk perubahan kecil (intensitas 4 ke bawah), cukup gunakan DELTA PROMPT di atas prompt asli. Untuk perubahan besar, pakai FULL PROMPT dan render ulang dari awal.');
+};
+
+TOOLMAP.imagegen.build=function(s,d){
+  d.h('SPESIFIKASI');
+  d.kv([['Ide',esc(s.ide||'— isi ide dulu di kiri')],['Subjek tambahan',esc(s.subjek||'—')],['Gaya',label(IMGSTYLES,s.gaya)],['Mood',label(MOODS,s.mood)],['Waktu',label(TIMES,s.waktu)],['Lensa',label(LENSES,s.lensa)],['Komposisi',label(KOMPOS,s.komposisi)],['Cahaya',label(LIGHTS,s.cahaya)]]);
+  d.h('MASTER PROMPT');
+  var parts=[s.ide||'the described scene',s.subjek||null,en(IMGSTYLES,s.gaya),en(MOODS,s.mood)+' mood',en(TIMES,s.waktu),s.lensa,s.komposisi,en(LIGHTS,s.cahaya)];
+  d.prompt('MASTER PROMPT — '+label(PLATFORMS,s.platform),fmtMaster(parts,s.rasio,s.platform),'Rasio '+s.rasio+(s.platform==='sdxl'?' → '+SDXL_AR[s.rasio]:''));
+  d.h('3 ARAH PENGEMBANGAN');
+  d.prompt('VARIASI A — LEBIH SINEMATIK',fmtMaster([s.ide,'cinematic anamorphic still, 35mm, film grain, moody grade',en(MOODS,s.mood)+' atmosphere',en(TIMES,s.waktu)],s.rasio,s.platform));
+  d.prompt('VARIASI B — LEBIH EDITORIAL',fmtMaster([s.ide,'high-fashion editorial quality, crisp and clean composition, magazine grade',s.komposisi],s.rasio,s.platform));
+  d.prompt('VARIASI C — LEBIH DRAMATIS',fmtMaster([s.ide,'dramatic single-source lighting, deep shadows, high contrast, intense atmosphere',en(MOODS,s.mood)],s.rasio,s.platform));
+  d.h('NEGATIVE PROMPT');
+  d.prompt('NEGATIVE PROMPT',[NEG,s.neg].filter(Boolean).join(', ')||NEG);
+};
+
+/* --- Influencer --- */
+var NICHE_MAP={
+ 'Kecantikan & skincare':{en:'beauty and skincare creator',pillars:['GRWM & rutinitas pagi/malam','Review jujur + swatch langsung di kamera','Mitos vs fakta skincare','Before–after perjalanan kulit','Restock & empties bulanan','Drugstore vs high-end: worth it?']},
+ 'Fashion':{en:'fashion creator',pillars:['OOTD: 1 item, 3 gaya','Thrift haul & styling ulang','Tren musim ini versi saya','Padu-padan untuk bentuk tubuh','Kapsul wardrobe minimalis','Get the look dengan budget']},
+ 'Kuliner':{en:'food content creator',pillars:['Makanan viral: worth it atau hype?','Resep 3 bahan untuk pemalu dapur','Street food hunting malam','Review restoran tanpa ampun','Cook-along santai 60 detik','Diet rugi: jajanan anak sekolah']},
+ 'Fitness':{en:'fitness creator',pillars:['Perjalanan berat badan saya','Form check: gerakan yang selama ini salah','Meal prep mingguan hemat','Latihan 15 menit tanpa alat','Q&A: mitos fitness','Transformasi 90 hari']},
+ 'Teknologi':{en:'tech creator',pillars:['Unboxing & first impression','Tips & trik tersembunyi','Aplikasi yang wajib dipasang','Harga vs performa: jujur saja','Setup meja kerja saya','Berita tech 60 detik']},
+ 'Travel':{en:'travel creator',pillars:['Itinerary hemat per kota','Tempat tersembunyi versi lokal','Penginapan: worth it atau tidak','Kuliner wajib per destinasi','Tips naik transportasi umum','Solo trip yang aman']},
+ 'Edukasi':{en:'educational creator',pillars:['Penjelasan 60 detik','Mitos vs fakta','Sesi belajar bareng','Ringkasan buku 1 menit','Q&A mingguan','Aplikasi belajar gratis']},
+ 'Gaming':{en:'gaming creator',pillars:['Highlight & momen konyol','Review game indie','Tutorial mechanik','Loadout & build meta','Main bareng pemirsa','Berita gaming kilat']}};
+var INF_F=['Kirana','Nadira','Ayla','Sekar','Livia','Maura','Anara','Selvi'];
+var INF_M=['Rey','Danu','Alva','Raka','Nio','Bima','Elang','Dirga'];
+var NICHE_HDL={'Kecantikan & skincare':['glow','skin','beauty'],'Fashion':['fit','style','ootd'],'Kuliner':['makan','lapar','food'],'Fitness':['fit','sweat','move'],'Teknologi':['tech','gadget','geek'],'Travel':['jalan','trip','go'],'Edukasi':['belajar','pintar','kata'],'Gaming':['gg','play','ggwp']};
+var PERSONA_VIS={
+ 'Elegan & minimalis':{v:'refined minimalist styling, clean neutral wardrobe, composed graceful poses',e:'serene confident smile',hair:'sleek low bun, jet-black hair',feat:'oval face, refined features, calm dark eyes',c:'soft diffused daylight, cream and ivory tones'},
+ 'Ceria & ekspresif':{v:'vibrant layered casual outfits, playful dynamic poses',e:'bright laughing expression',hair:'shoulder-length tousled waves, warm brown',feat:'round friendly face, expressive crinkled eyes',c:'high-energy colorful lighting'},
+ 'Teman sebelah (relatable)':{v:'everyday comfortable outfits, relaxed candid poses',e:'warm approachable smile',hair:'loose ponytail, natural black',feat:'soft natural face, light freckles, gentle gaze',c:'natural window light, cozy warm tones'},
+ 'Luxury & aspiratif':{v:'tailored statement pieces, sculptural poses',e:'poised neutral gaze',hair:'glossy straight long hair, espresso brown',feat:'sculpted cheekbones, sharp elegant jawline',c:'golden sculpting light, rich shadows'},
+ 'Edgy street':{v:'oversized streetwear, bold accessories, confident stance',e:'defiant cool gaze',hair:'shaggy wolf cut with highlights',feat:'sharp brows, small mole under the eye',c:'neon and streetlight mix, night city'},
+ 'Kalem & informatif':{v:'smart-casual muted outfits, seated composed poses',e:'attentive calm expression',hair:'tidy bob with full bangs, dark brown',feat:'intelligent soft eyes, gentle smile',c:'soft even key light, muted palette'}};
+var VIBE_PAL={
+ 'Netral hangat':['#E8DCC8','#C9B79C','#8A7360','#3E332A'],
+ 'Monokrom editorial':['#F2F2F2','#B8B8B8','#555555','#111111'],
+ 'Pop cerah':['#FFD23F','#FF6B35','#F72585','#3A86FF'],
+ 'Pastel lembut':['#FADDE1','#D9CFF5','#CFE8D5','#FDF3D8'],
+ 'Gelap sinematik':['#1A1B1E','#2E3038','#8C4A3C','#D9A566'],
+ 'Earthy bohemian':['#E5D3B3','#C0A272','#7D6B51','#4A3F30']};
+
+TOOLMAP.influencer.build=function(s,d){
+  var isM=(s.gender==='man');
+  var nm=s.nama||(isM?randOf(INF_M):randOf(INF_F));
+  var nio=NICHE_MAP[s.niche]||{en:'content creator',pillars:['Konten pembuka','Konten harian','Konten interaksi','Konten edukatif','Konten tren','Konten personal']};
+  var pv=PERSONA_VIS[s.persona]||PERSONA_VIS['Elegan & minimalis'];
+  var pal=VIBE_PAL[s.vibe]||VIBE_PAL['Netral hangat'];
+  var handle='@'+nm.toLowerCase().replace(/[^a-z]/g,'')+'.'+randOf(NICHE_HDL[s.niche]||['daily']);
+  d.h('KARTU PERSONA');
+  d.kv([['Nama',esc(nm)],['Handle',handle],['Niche',esc(s.niche)],['Persona',esc(s.persona)],['Usia',s.usia+' tahun'],['Platform utama',esc(s.pf)],['Tone bahasa',esc(s.tone)],['Vibe feed',esc(s.vibe)]]);
+  d.h('BIO PROFILE');
+  d.p(esc(nm)+' — '+esc(s.niche).toLowerCase()+' · persona '+esc(s.persona).toLowerCase()+' · aktif di '+esc(s.pf)+'. Konten jujur tanpa dibuat-buat. Kolab: DM.');
+  d.h('MASTER PROMPT WAJAH — KUNCI KONSISTENSI');
+  d.prompt('FACE MASTER PROMPT',
+    '[IDENTITY] ultra-realistic portrait of a '+s.usia+'-year-old '+s.gender+' '+nio.en+', '+pv.feat+', '+pv.hair+' — lock this exact face for every piece of content\n'+
+    '[STYLE] '+pv.v+'\n'+
+    '[EXPRESSION] '+pv.e+'\n'+
+    '[LIGHT] '+pv.c+'\n'+
+    '[FEED PALETTE] '+pal.join(', ')+'\n'+
+    '[RENDER] 85mm portrait lens, f/1.8, natural skin texture, editorial quality',
+    'Simpan prompt ini. Setiap generate ulang, bagian IDENTITY tidak boleh berubah sedikit pun.');
+  d.prompt('TEMPLATE PROMPT HARIAN','photo of '+nm+' (the referenced AI influencer), '+pv.hair+', '+pv.e+', [TAMBAHKAN AKTIVITAS & LOKASI DI SINI], palette '+pal[0]+' & '+pal[2]+', authentic social-media candid, 35mm','Ganti bagian [ ... ] sesuai ide konten — wajah & vibe tetap terkunci.');
+  d.h('PALET FEED');
+  d.pal(pal);
+  d.h('PILAR KONTEN');
+  d.list(nio.pillars.map(function(p,i){return '<b>P'+(i+1)+' · '+p+'</b>';}));
+  d.h('6 IDE KONTEN PEMBUKA');
+  var fmts=['hook 3 detik + payoff di akhir','format POV first-person','tutorial kilat 15 detik','storytime 60 detik','sebelum–sesudah','listicle 3 poin cepat'];
+  var hooks=['Jangan skip — ini bagian yang belum kamu tahu','Aku coba 30 hari, hasilnya di menit terakhir','Hal yang nggak pernah diceritain orang soal '+s.niche.toLowerCase(),'Simpan ini sebelum kamu butuh','Kenapa baru sekarang ada yang bilang ini?'];
+  d.list(nio.pillars.slice(0,6).map(function(p,i){return '<b>'+(i+1)+' · '+p+'</b> — format: '+fmts[i%fmts.length]+' · hook: "'+hooks[i%hooks.length]+'"';}));
+  d.h('RITME POSTING 7 HARI');
+  var days=['SEN','SEL','RAB','KAM','JUM','SAB','MIN'];
+  d.list(days.map(function(dy,i){return '<b>'+dy+'</b> — '+nio.pillars[i%nio.pillars.length]+' · posting jam '+(i%2?'12.00':'19.00');}));
+  d.note('Aturan konsistensi: generate wajah sekali, simpan sebagai referensi (Midjourney <b>--cref</b> / SDXL <b>IP-Adapter</b> / referensi Flux), lalu variasikan hanya pakaian, lokasi, dan aktivitas. Palet feed dijaga dengan grading seragam.');
+};
+
+/* --- UGC --- */
+function fill(t,ctx){
+  return t.replace(/\{p\}/g,ctx.p).replace(/\{produk\}/g,ctx.produk).replace(/\{audiens\}/g,ctx.audiens).replace(/\{brand\}/g,ctx.brand).replace(/\{offer\}/g,ctx.offer).replace(/\{pain\}/g,ctx.pain).replace(/\{aud\}/g,ctx.aud);
+}
+var UGC_HOOKS={
+ problem:['"Stop scroll dulu — kalau kamu masih deal dengan {p} tiap hari, tonton ini sampai habis."','"POV: kamu udah coba semua cara, tapi {p} nggak hilang-hilang."','"Dua minggu lalu aku masih {p}. Ini ceritanya…"'],
+ curiosity:['"Ternyata yang bikin {p} bukan yang selama ini kamu kira."','"Ini rahasia yang nggak akan diceritain seller lain."','"Kenapa barang se-sederhana ini bisa bikin beda? Aku tes 14 hari."'],
+ relatable:['"Cerita singkat: aku tuh paling males ngadepin {p}…"','"Kalau kamu {audiens}, kamu pasti ngerti rasanya."','"Dari semua yang pernah aku coba, ini satu-satunya yang aku repeat order."']};
+var UGC_TXT={
+ HOOK:['"Stop scroll dulu — kalau kamu masih deal dengan {p} tiap hari, tonton ini sampai habis."','"POV: kamu udah coba semua cara, tapi {p} nggak hilang-hilang."','"Dua minggu lalu aku masih {p}. Ini ceritanya…"'],
+ RELATABLE:['"Jujur, aku tipe yang paling males ribet. Kalau ada yang simpel, aku ambil."','"Awalnya aku skeptis sama barang macam ini. Serius."','"Aku beli ini cuma karena dipromoin teman sendiri. Ternyata…"'],
+ MASALAH:['"Jadi masalahnya {p}. Udah coba ini-itu, hasilnya zonk."','"{p} tuh bikin nggak percaya diri. Serius."','"Tiap hari ngadepin {p} itu capek, ya kan?"'],
+ SOLUSI:['"Sampai akhirnya nemu {produk}. Awalnya ragu — tapi coba aja."','"{produk} ini yang akhirnya memperbaiki rutinitas aku."','"Dan ini — {produk}. Spoiler: nggak nyesel."'],
+ PRODUK:['"Jadi ini {produk}. Buat {audiens} macam aku, ini game changer."','"{produk} — satu-satunya yang aku repeat order."','"Bukan magic, tapi {produk} ini kerja beneran."'],
+ DEMO:['"Cara pakainya semudah ini — satu langkah, selesai."','"Teksturnya aman, wanginya nggak norak. Hasilnya? Sabar."','"Aku pakai tiap hari konsisten. Begini jadinya…"'],
+ 'DEMO DETAIL':['"Perhatiin detailnya di bagian ini — di sinilah bedanya."','"Langkah ini yang paling sering dilewatin orang. Jangan."','"Lambatkan sedikit — lihat teksturnya waktu dipakai."'],
+ HASIL:['"Dua minggu kemudian… lihat sendiri bedanya."','"Nggak dramatis, tapi konsisten. Itu yang penting."','"Sekarang {p} udah bukan masalah aku lagi."'],
+ CTA:['"Kalau penasaran, cek link di bio — jangan lupa kodenya."','"Link-nya aku taruh di bio. Yang mau tanya-tanya, DM aja."','"Save video ini biar nggak lupa, lalu cek link di bio."']};
+var UGC_VIS={
+ HOOK:'CU selfie handheld, tatap langsung ke lensa, gesture tangan "berhenti"',
+ MASALAH:'b-roll cepat masalah sehari-hari, potongan 0,5–1 detik, agak goyah',
+ RELATABLE:'medium santai duduk/berdiri, cahaya jendela alami',
+ SOLUSI:'CU produk di tangan, putaran pelan, cahaya lembut',
+ PRODUK:'CU produk di tangan, fokus tajam, cahaya jendela',
+ DEMO:'POV pemakaian, overhead 45°, gerakan lambat di momen kunci',
+ 'DEMO DETAIL':'macro detail langkah pemakaian, overhead 45°',
+ HASIL:'transisi before–after, ekspresi puas',
+ CTA:'CU kembali ke wajah, senyum, tunjuk ke bawah (arah bio)'};
+var SHOT_EN={
+ HOOK:'handheld close-up selfie, young person talking to camera, natural window light, authentic UGC phone-camera aesthetic',
+ MASALAH:'candid b-roll of daily frustration moment, slightly shaky handheld, natural indoor light',
+ RELATABLE:'medium shot, person sitting relaxed, cozy natural window light, candid feel',
+ SOLUSI:'close-up of product held in hand, slow rotation, soft daylight, sharp focus',
+ PRODUK:'close-up of product in hand, natural window light, authentic feel',
+ DEMO:'POV overhead 45 degrees of product being used, natural morning light, clean background',
+ 'DEMO DETAIL':'macro POV detail of application, soft window light, shallow depth',
+ HASIL:'before-and-after transition frame, authentic lighting, believable texture',
+ CTA:'close-up smiling face pointing downward, warm natural light, friendly energy'};
+var UGC_TAGS={'Skincare':['#skincare','#skincareroutine','#glowup','#kulitsehat'],'Makeup':['#makeup','#makeuptutorial','#grwm'],'Fashion':['#ootd','#styleinspo','#thriftfind'],'Makanan & minuman':['#kuliner','#foodreview','#mukbang'],'Gadget':['#gadgetreview','#teknologi'],'Peralatan rumah':['#hometools','#rumahrapi'],'Jasa & aplikasi':['#aplikasirekomendasi','#produkdigital'],'Kesehatan':['#hidupsehat','#wellness']};
+function ugcBeats(dur){
+  if(dur==='15s')return [['HOOK',0,3],['MASALAH',3,6],['PRODUK',6,11],['CTA',11,15]];
+  if(dur==='30s')return [['HOOK',0,3],['MASALAH',3,9],['SOLUSI',9,13],['DEMO',13,22],['HASIL',22,26],['CTA',26,30]];
+  return [['HOOK',0,4],['RELATABLE',4,10],['MASALAH',10,18],['PRODUK',18,24],['DEMO DETAIL',24,38],['HASIL',38,48],['CTA',48,60]];
+}
+TOOLMAP.ugc.build=function(s,d){
+  var pain=(s.masalah||'masalah yang belum terjawab').trim();
+  var pShort=pain.length>70?pain.slice(0,70)+'…':pain;
+  var ctx={p:pShort,pain:pShort,produk:s.produk||'produk ini',audiens:s.audiens,aud:s.audiens,brand:s.produk||'produk ini',offer:'link di bio'};
+  d.h('BRIEF PRODUK');
+  d.kv([['Produk',esc(s.produk||'—')],['Kategori',s.kategori],['Masalah inti',esc(pain)],['Target',s.audiens],['Platform',s.pf],['Durasi',s.durasi],['Tone',s.tone],['Gaya bicara',s.gaya]]);
+  d.h('3 PILIHAN HOOK — 3 DETIK PERTAMA');
+  var hookSet=(s.tone==='Kalem & informatif')?UGC_HOOKS.curiosity:((s.tone==='Komedi relatable')?UGC_HOOKS.relatable:UGC_HOOKS.problem);
+  d.list(hookSet.map(function(h,i){return '<b>HOOK '+(i+1)+'</b> — '+esc(fill(h,ctx));}));
+  d.h('SCRIPT BER-TIMECODE — '+s.durasi);
+  var beats=ugcBeats(s.durasi);
+  beats.forEach(function(b,i){
+    var lines=UGC_TXT[b[0]]||UGC_TXT.DEMO;
+    d.scene('SEG '+(i+1)+' · '+b[0],[
+      ['Timecode',fmtTC(b[1])+' → '+fmtTC(b[2])],
+      ['Narasi',esc(fill(lines[i%lines.length],ctx))],
+      ['Visual',UGC_VIS[b[0]]||UGC_VIS.DEMO]
+    ],fmtTC(b[1])+'–'+fmtTC(b[2]));
+  });
+  d.h('SHOTLIST + PROMPT VISUAL');
+  var out='';
+  beats.forEach(function(b,i){
+    out+='SEG '+(i+1)+' ('+b[0]+') · TC '+fmtTC(b[1])+'→'+fmtTC(b[2])+'\n';
+    out+=(SHOT_EN[b[0]]||SHOT_EN.DEMO)+', UGC style, vertical 9:16';
+    if(i<beats.length-1)out+='\n\n';
+  });
+  d.prompt('PROMPT PER SEGMENT — SIAP GENERATE',out);
+  d.h('CAPTION SIAP PAKAI');
+  var tags=(UGC_TAGS[s.kategori]||['#review']).concat(['#fyp','#racuntiktok','#rekomendasi']);
+  d.prompt('CAPTION + HASHTAG',fill(hookSet[0],ctx)+'\n\nJujur, '+(s.produk||'produk ini')+' ini yang akhirnya bikin "'+pShort+'" beres.\nLink ada di bio — '+s.audiens.toLowerCase()+' wajib cek.\n.\n.\n'+tags.slice(0,8).join(' '));
+  d.note('Prinsip UGC: 3 detik pertama menahan scroll, sisa video membayar janjinya. Rekam gaya bicara "'+s.gaya.toLowerCase()+'" secara konsisten di semua segmen agar terasa satu orang, satu cerita.');
+};
+
+/* --- Drama Pendek V2 --- */
+var TWIST_DL=['"Kamu pikir kamu yang main? Aku yang nyusun papan caturnya."','"Aku bukan korban di cerita ini. Aku penulisnya."','"Semua yang kamu lihat… memang sudah aku rencanakan."'];
+var DRAMA_TPL={};
+
+DRAMA_TPL['Underdog — dari bawah ke puncak']={
+ log:'{mc}, {role} di {latar}, selalu diremehkan — sampai satu kesempatan memaksa semua orang menghitung ulang siapa dia.',
+ sc:[
+  {t:'REMEHAN',a:'{mc} menjalani hari biasa sebagai {role}; {foe} melempar hinaan santai yang menggigit',dl:'"Kamu? Serius? Yaudah — yang penting kamu nyoba."',sh:'wide rutinitas lalu medium {mc}',e:'wide to medium, overcast soft light'},
+  {t:'TITIK TERENDAH',a:'sendirian, {mc} menatap sisa hari yang berantakan',dl:'"Nggak apa-apa… aku udah terbiasa."',sh:'CU wajah, cahaya samping',e:'tight close-up, dramatic sidelight'},
+  {t:'PELUANG',a:'sebuah tawaran kecil mengubah arah hari',dl:'"Tunggu — ini buat aku?"',sh:'insert benda plus reaksi',e:'insert shot plus reaction close-up'},
+  {t:'BERSIAP',a:'montase singkat {mc} berlatih menyiapkan semuanya',dl:'"Kalau cuma sekali, aku nggak mau setengah-setengah."',sh:'montase cepat 3 potongan',e:'fast montage, warm practicals'},
+  {t:'PEMBUKTIAN',a:'momen penentuan — semua mata tertuju ke {mc}',dl:'"Sekarang, lihat baik-baik."',sh:'slow push-in dari medium ke CU',e:'slow push-in, high contrast key light'},
+  {t:'RESOLUSI',a:'suara tepuk tangan; {foe} diam; {relasi} tersenyum bangga',dl:'"Aku bilang apa? Aku bilang bisa."',sh:'wide epik senja',e:'golden-hour wide, gentle lens flare'}
+ ]
+};
+
+DRAMA_TPL['Plot twist — terbalik di menit terakhir']={
+ log:'Semua orang mengira tahu bagaimana cerita ini berakhir — {mc} punya rencana lain.',
+ sc:[
+  {t:'NORMAL',a:'hari yang tampak biasa di {latar}',dl:'"Hari ini kayaknya aman-aman aja, ya?"',sh:'establishing wide',e:'wide establishing, neutral daylight'},
+  {t:'ANEH',a:'ada detail kecil yang tidak pada tempatnya',dl:'"…Ini kok ada di sini?"',sh:'insert detail misterius',e:'macro insert, cool shadow'},
+  {t:'INVESTIGASI',a:'{mc} mulai menelusuri kejanggalan',dl:'"Kalau beneran kebetulan, kenapa aku yang selalu nemu?"',sh:'tracking medium mengikuti',e:'tracking medium, dusk tones'},
+  {t:'TERJUN',a:'keadaan memburuk lebih cepat dari dugaan',dl:'"Kita nggak punya waktu."',sh:'handheld intens',e:'handheld, high contrast, cool grade'},
+  {t:'TWIST',a:'identitas dan motivasi terbalik total',dl:'"Kamu pikir kamu yang main? Aku yang nyusun papan caturnya."',sh:'cut keras ke CU',e:'hard cut to close-up, single source light'},
+  {t:'REALITAS BARU',a:'dunia kecil cerita tersusun ulang',dl:'"Sekarang, ulangi lagi — dari awal."',sh:'wide simetris',e:'symmetric wide, cyan-amber grade'}
+ ]
+};
+
+DRAMA_TPL['Salah paham — komedi romantis']={
+ log:'Salah paham kecil berubah jadi bencana yang lucu antara {mc} dan orang yang paling dia hindari.',
+ sc:[
+  {t:'PERTEMUAN',a:'tabrakan harfiah: kopi, file, dan harga diri melayang',dl:'"Eh—maaf! Bukan—itu file penting!"',sh:'medium dua orang, timing komedi',e:'two-shot, bright natural light'},
+  {t:'SALAH PAHAM',a:'ucapan salah dengar meng-eskalasi',dl:'"Katanya kamu bilang aku… OKE. Oke."',sh:'CU bergantian keduanya',e:'alternating close-ups, sitcom clarity'},
+  {t:'ESKALASI',a:'balas-membalas berujung perang dingin lucu',dl:'"Dua bisa main game ini."',sh:'wide komedi dengan jarak konyol',e:'wide with comic negative space'},
+  {t:'KEJEPIT',a:'terjebak satu tempat, terpaksa bekerja sama',dl:'"Satu jam. Setelah itu kita pura-pura tidak saling kenal."',sh:'medium rapat dua orang',e:'tight two-shot, warm interior'},
+  {t:'JUJUR',a:'kebenaran kecil melunakkan semuanya',dl:'"Jadi… aku salah dengar dari awal. Bukan salah kamu."',sh:'CU lembut golden hour',e:'soft close-up, golden hour'},
+  {t:'MANIS',a:'penutup hangat dan sedikit nakal',dl:'"Kopi? — Kali ini aku yang pegang gelasnya."',sh:'wide manis penutup',e:'warm wide, gentle bloom'}
+ ]
+};
+
+DRAMA_TPL['Rahasia keluarga — retak dan rekonsiliasi']={
+ log:'Rahasia lama keluarga {mc} retak terbuka — dan justru dari situ penyembuhan dimulai.',
+ sc:[
+  {t:'KETEGANGAN',a:'makan malam senyap; sumpit berhenti di udara',dl:'"…Ada yang mau cerita, bu?"',sh:'medium meja, keheningan',e:'dining table medium, low warm light'},
+  {t:'BOCOR',a:'kalimat yang lama ditelan akhirnya keluar',dl:'"Sebenarnya… aku tau semuanya."',sh:'CU ekspresi',e:'close-up, dim practicals'},
+  {t:'RETAK',a:'amarah dan luka bertukar tempat',dl:'"Kenapa sekarang? Kenapa bukan dari dulu?"',sh:'handheld dua orang',e:'handheld two-shot, moody'},
+  {t:'KONFRONTASI',a:'semua yang tertutup dibuka',dl:'"Aku ingin melindungi kamu. Itu salahnya aku."',sh:'wide kosong di antara mereka',e:'wide with empty middle space'},
+  {t:'KEJUJURAN',a:'{relasi} jadi jembatan',dl:'"Kita satu keluarga. Retaknya boleh ada — asal kita yang memperbaiki."',sh:'medium lembut',e:'soft medium, warm lamp light'},
+  {t:'REKONSILIASI',a:'pelukan yang menutup cerita',dl:'"Pulang yuk. Masih ada es krim di kulkas."',sh:'wide hangat penutup',e:'warm wide, gentle film grain'}
+ ]
+};
+
+var DRAMA_EXTRA=[
+ {t:'JEDA',a:'momen tenang sebelum semuanya berubah',dl:'"Diam-diam… ini enak juga."',sh:'insert detail ambient',e:'ambient insert, soft light'},
+ {t:'KILAS',a:'kilas balik singkat yang menjelaskan segalanya',dl:'"Jadi sejak itu… semua berubah."',sh:'flashback desaturasi',e:'desaturated flashback grade'},
+ {t:'PANGGILAN',a:'telepon tak terduga mempercepat semuanya',dl:'"Kamu harus dengar ini sekarang."',sh:'CU telepon plus wajah',e:'phone close-up, night light'},
+ {t:'PENYELAMAT',a:'{relasi} muncul di waktu yang tepat',dl:'"Aku tau aku bukan siapa-siapa. Tapi aku di sini."',sh:'medium dua orang',e:'two-shot, dawn light'}
+];
+
+TOOLMAP.drama.build=function(s,d){
+  var mc=s.mc||'Kira',role=s.role||'barista paruh waktu',foe=s.foe||'orang yang paling meremehkannya',rel=s.relasi,latar=s.latar||'kota kecil di pinggir Jakarta';
+  var tpl=DRAMA_TPL[s.tpl]||DRAMA_TPL['Underdog — dari bawah ke puncak'];
+  var fx=function(t){
+    return t.replace(/\{mc\}/g,esc(mc)).replace(/\{role\}/g,esc(role)).replace(/\{foe\}/g,esc(foe)).replace(/\{relasi\}/g,esc(rel)).replace(/\{latar\}/g,esc(latar));
+  };
+  var scenes=tpl.sc.map(function(x){return Object.assign({},x);});
+  if(s.jml<scenes.length){scenes=scenes.slice(0,s.jml);}
+  else if(s.jml>scenes.length){
+    var i=0;
+    while(scenes.length<s.jml){
+      scenes.splice(scenes.length-1,0,Object.assign({},DRAMA_EXTRA[i%DRAMA_EXTRA.length]));
+      i++;
+    }
+  }
+  if(s.twist==='Ya'&&scenes.length>=3){
+    var t=scenes[scenes.length-2];
+    t.t='TWIST · '+t.t;
+    t.dl=TWIST_DL[scenes.length%TWIST_DL.length];
+  }
+  var w=scenes.map(function(_,i){return i===0?0.9:(i===scenes.length-2?1.35:(i===scenes.length-1?0.95:1));});
+  var sum=w.reduce(function(a,b){return a+b;},0);
+  var tAcc=0;
+  var rows=scenes.map(function(sc,i){
+    var dur=s.durasi*w[i]/sum;
+    var tc0=tAcc;tAcc+=dur;
+    return {sc:sc,tc0:tc0,tc1:tAcc,dur:dur};
+  });
+  d.h('LOGLINE');
+  d.p(fx(tpl.log));
+  d.h('KARAKTER');
+  d.kv([['Tokoh utama',esc(mc)+' — '+esc(role)],['Penentang',esc(foe)],['Orang terdekat',esc(rel)],['Latar',esc(latar)],['Genre',s.genre],['Tone',s.tone],['Format',s.durasi+' detik · '+scenes.length+' scene · '+s.pf]]);
+  d.h('STRUKTUR');
+  d.list(rows.map(function(r,i){return '<b>S'+(i+1)+' '+r.sc.t+'</b> — '+fmtTC(r.tc0)+' → '+fmtTC(r.tc1)+' ('+r.dur.toFixed(1)+'s)';}));
+  d.h('BREAKDOWN ADEGAN');
+  rows.forEach(function(r,i){
+    d.scene('SCENE '+(i+1)+' — '+r.sc.t,[
+      ['Timecode',fmtTC(r.tc0)+' → '+fmtTC(r.tc1)+' · '+r.dur.toFixed(1)+'s'],
+      ['Aksi',fx(r.sc.a)],
+      ['Dialog',fx(r.sc.dl)],
+      ['Shot',fx(r.sc.sh)],
+      ['Prompt visual','cinematic film still, '+r.sc.e+', '+s.tone.toLowerCase()+' mood, '+esc(latar)+', vertical 9:16 for '+s.pf]
+    ],'SC '+(i+1)+'/'+rows.length);
+  });
+  d.h('CATATAN PRODUKSI');
+  d.list([
+    'Kunci wajah <b>'+esc(mc)+'</b> dengan <b>Character Generator</b> sebelum render scene — jangan sampai wajah berubah antar shot.',
+    'Ambil referensi pacing drama sejenis lewat <b>Scene Extractor</b>, lalu bandingkan durasi scene rata-ratanya dengan struktur di atas.',
+    'Generate scene demi scene (bukan sekaligus) agar ekspresi dan konsistensi kostum tetap terkendali.'
+  ]);
+  d.note('Struktur ini mengikuti pola drama pendek yang terbukti bekerja di '+s.pf+': konflik terasa di detik 1–3, eskalasi di tengah, dan pukulan emosional di 10% terakhir durasi.');
+};
+
+/* --- Music Clip V2 --- */
+var MUSIC_KON={
+ 'perf-nar':{l:'performa + naratif',d:'menjalin penampilan {tokoh} dengan alur cerita pendek yang sejalan dengan lirik'},
+ 'one-take':{l:'one-take mengalir',d:'satu tarikan kamera terus-menerus yang menembus ruang dan waktu, transisi lewat gerakan kamera'},
+ 'metaphor':{l:'metafora visual',d:'setiap bagian lagu diwakili benda dan perumpamaan visual yang berubah seiring intensitas lagu'},
+ 'story':{l:'storyline sinematik',d:'alur cerita utuh dari awal hingga akhir yang naik-turun mengikuti dinamika lagu'}};
+var MUSIC_SHOTS=[
+ ['Wide establishing','membuka ruang — tokoh kecil di tengah {lokasi}'],
+ ['Medium tracking','kamera mengikuti langkah {tokoh} dari samping'],
+ ['Close-up emosi','wajah {tokoh}; detik-detik sebelum chorus'],
+ ['Insert detail','tangan, hujan, pantulan — detail yang bercerita'],
+ ['CU reaksi','mata {tokoh} menutup tepat sebelum beat drop'],
+ ['Dutch angle','ketegangan miring saat bridge'],
+ ['Over-the-shoulder','{tokoh} membelakangi kamera, menatap kejauhan'],
+ ['Crane wide','kamera naik perlahan menutup bagian akhir']];
+var GRADE_PAL={'Teal & orange':['#0E3B43','#F08A34','#D9C6A5','#1B1B1E'],'Bleach bypass':['#E6E6E6','#9FA4A9','#5A5F63','#22262A'],'Monokrom kontras':['#FFFFFF','#B3B3B3','#4D4D4D','#0A0A0A'],'Warm nostalgic':['#E8C39E','#C97B4A','#7A4A32','#3A2A20'],'Neon malam':['#101018','#3A2E6E','#E4486A','#22D3EE'],'Desaturated dingin':['#D7DBDF','#9AA3AB','#5C666E','#2C3237']};
+var CUT_BEAT={'Pop melankolis':4,'R&B':8,'Hip-hop':4,'EDM':2,'Indie folk':8,'Rock alternatif':4};
+
+TOOLMAP.music.build=function(s,d){
+  var tk=s.tokoh||'tokoh utama',lk=s.lokasi||'lokasi utama';
+  var kon=MUSIC_KON[s.konsep]||MUSIC_KON['perf-nar'];
+  var beatDur=60/s.bpm,barDur=beatDur*4,bars=Math.max(1,Math.round(s.durasi/barDur));
+  var cutB=CUT_BEAT[s.genre]||4;
+  d.h('TREATMENT');
+  d.p('Music clip "'+esc(s.judul||'untitled')+'" — '+s.genre.toLowerCase()+' bernuansa '+label(MOODS,s.mood).toLowerCase()+'. Konsep '+kon.l+': '+kon.d.replace(/\{tokoh\}/g,esc(tk)).replace(/\{lokasi\}/g,esc(lk))+'. Tokoh: '+esc(tk)+' · panggung utama: '+esc(lk)+' · grading '+s.grading.toLowerCase()+' dijaga konsisten dari shot pertama sampai terakhir.');
+  d.h('SPESIFIKASI RITME');
+  d.kv([['Durasi',fmtTC(s.durasi)+' ('+s.durasi+'s)'],['Tempo',s.bpm+' BPM'],['1 beat',beatDur.toFixed(2)+'s'],['1 bar (4/4)',barDur.toFixed(2)+'s'],['Total bar','≈ '+bars],['Irama potongan','cut tiap '+cutB+' beat ('+(cutB*beatDur).toFixed(1)+'s)'],['Jumlah shot',s.jml+' shot · rata-rata '+(s.durasi/s.jml).toFixed(1)+'s/shot']]);
+  d.h('PALET GRADING');
+  d.pal(GRADE_PAL[s.grading]||GRADE_PAL['Teal & orange']);
+  d.h('SHOTLIST — TERPETAKAN KE BEAT');
+  var items=[];
+  for(var i=0;i<s.jml;i++){
+    var t0=s.durasi*i/s.jml,t1=s.durasi*(i+1)/s.jml;
+    var beat=Math.round(t0/beatDur)+1,bar=Math.floor((beat-1)/4)+1;
+    var sh=MUSIC_SHOTS[i%MUSIC_SHOTS.length];
+    items.push('<b>S'+pad(i+1)+' · '+fmtTC(t0)+'→'+fmtTC(t1)+' · beat '+beat+' / bar '+bar+'</b> — '+sh[0]+': '+sh[1].replace(/\{tokoh\}/g,esc(tk)).replace(/\{lokasi\}/g,esc(lk)));
+  }
+  d.list(items);
+  d.h('PETA STRUKTUR');
+  var i0=s.durasi*0,i1=s.durasi*.15,v0=s.durasi*.15,v1=s.durasi*.4,c0=s.durasi*.4,c1=s.durasi*.6,o0=s.durasi*.9,o1=s.durasi;
+  d.list([
+    '<b>INTRO '+fmtTC(i0)+'–'+fmtTC(i1)+'</b> — atmosfer dibangun, shot lambat',
+    '<b>VERSE '+fmtTC(v0)+'–'+fmtTC(v1)+'</b> — cerita dan performa bergantian',
+    '<b>CHORUS '+fmtTC(c0)+'–'+fmtTC(c1)+'</b> — puncak energi, potongan paling rapat',
+    '<b>OUTRO '+fmtTC(o0)+'–'+fmtTC(o1)+'</b> — melonggar, satu shot panjang penutup'
+  ]);
+  d.h('PROMPT KUNCI');
+  d.prompt('LOOK MASTER — SELURUH CLIP','music video still, '+tk+', '+lk+', '+s.genre.toLowerCase()+' '+en(MOODS,s.mood)+' atmosphere, '+s.grading.toLowerCase()+' color grade, anamorphic 35mm, film grain, consistent character across all shots');
+  d.prompt('MOMEN CHORUS','high-energy music video frame, '+tk+' mid-motion, dynamic camera angle, practical lights streaking, '+s.grading.toLowerCase()+' grade, motion energy, environment reacting');
+  d.prompt('PENUTUP','quiet final frame, '+tk+' alone in '+lk+', static wide shot, '+en(MOODS,s.mood)+' mood settling, '+s.grading.toLowerCase()+' grade, fading light');
+  d.note('Pasang lagu di timeline editing, letakkan marker setiap '+cutB+' beat ('+(cutB*beatDur).toFixed(2)+'s), lalu pasangkan shotlist di atas ke marker-nya — semua potongan akan jatuh tepat di beat.');
+};
+
+/* --- Ads Maker --- */
+var ADS_TXT={
+ HOOK:['{pain}. Tiap hari. Stop scroll sekali ini aja.','Kalau kamu {aud}, detik berikutnya buat kamu.','Ini iklan paling jujur yang kamu tonton hari ini.'],
+ MASALAH:['Masalahnya bukan kamu — sistemnya yang ribet.','{pain} itu capek. Kami dengar keluhannya.','Semua solusi sebelumnya setengah jalan. Ini beda.'],
+ SOLUSI:['{brand} masuk dari sini: satu hal, dikerjakan benar.','Kami tidak jual mimpi — kami jual perbaikan kecil yang konsisten.','Kenapa {brand} beda? Dibuat untuk {aud} beneran.'],
+ DEMO:['Begini cara kerjanya — lihat, sesederhana itu.','Satu langkah. Selesai. Tanpa drama.','Detail kecilnya yang bikin nagih.'],
+ BUKTI:['Bukan kata kami — kata mereka yang pakai harian.','Rating bicara lebih keras dari iklan.','Retur nyaris nol. Itu poin kami.'],
+ 'BUKTI SOSIAL':['Bukan kata kami — kata mereka yang pakai harian.','Rating bicara lebih keras dari iklan.','Retur nyaris nol. Itu poin kami.'],
+ OFFER:['{offer}. Setelah ini, harga normal lagi.','Jendela {offer} tidak terbuka selamanya.','Ambil {offer} sekarang, syukur nanti.'],
+ CTA:['Klik. Cek. {brand} menunggu di link.','Link ada di bio — {offer} berlaku terbatas.','Satu klik sekarang, satu masalah berkurang.']};
+var ADS_VIS={HOOK:'CU relatable, tatap kamera — 2 detik pertama harus menahan scroll',MASALAH:'b-roll cepat pain point sehari-hari',SOLUSI:'produk masuk frame dengan tenang',DEMO:'demo jelas — overhead dan CU bergantian',BUKTI:'tangkapan layar testimoni & rating, zoom pelan','BUKTI SOSIAL':'tangkapan layar testimoni & rating, zoom pelan',OFFER:'teks offer besar di atas cuplikan produk',CTA:'CU senyum + arahkan perhatian ke link'};
+var ADS_SHOT_EN={HOOK:'scroll-stopping close-up, direct eye contact, authentic handheld feel',MASALAH:'quick relatable b-roll of the pain point, natural light',SOLUSI:'calm product reveal held in hand, confident framing',DEMO:'clear demo shot, overhead 45 degrees alternating with close-ups',BUKTI:'stacked testimonials and star ratings, slow zoom','BUKTI SOSIAL':'stacked testimonials and star ratings, slow zoom',OFFER:'bold offer text over product hero shot, clean background',CTA:'friendly close-up, gesture toward the link or bio'};
+var ADS_HL=['{brand}: berhenti ribet, mulai hari ini','Untuk {aud} yang tiap hari ngadepin "{pain}"','"{pain}"? Sudah waktunya ganti strategi','Satu perubahan kecil, efek yang terasa','{brand} — dibuat untuk yang sibuk'];
+function adsBeats(dur){
+  if(dur==='15s')return [['HOOK',0,2],['MASALAH',2,5],['SOLUSI',5,11],['CTA',11,15]];
+  if(dur==='30s')return [['HOOK',0,3],['MASALAH',3,9],['SOLUSI',9,14],['BUKTI',14,21],['OFFER',21,26],['CTA',26,30]];
+  if(dur==='60s')return [['HOOK',0,4],['MASALAH',4,12],['SOLUSI',12,20],['DEMO',20,32],['BUKTI SOSIAL',32,40],['OFFER',40,50],['CTA',50,60]];
+  return [];
+}
+TOOLMAP.ads.build=function(s,d){
+  var brand=s.brand||'Produk',pain=(s.pain||'masalah harian audiens').trim(),aud=s.audiens||'target audiens',offer=s.offer||'cek link sekarang';
+  var ctx={brand:brand,pain:pain,aud:aud,offer:offer,p:pain};
+  var staticAd=(s.pf==='Feed statis'||s.durasi==='—');
+  d.h('BRIEF');
+  d.kv([['Produk / brand',esc(brand)],['Jenis',s.jenis],['Tujuan',s.tujuan],['Audiens',esc(aud)],['Pain point',esc(pain)],['Platform',s.pf],['Gaya',s.gaya],['Tone',s.tone]]);
+  d.h('BIG IDEA — 3 SUDUT PSIKOLOGIS');
+  d.list([
+    '<b>01 · SUDUT SAKIT</b> — buka langsung dari "'+esc(pain)+'" yang terlalu spesifik sampai penonton merasa terbaca. Produk masuk sebagai jalan keluar, bukan pahlawan.',
+    '<b>02 · SUDUT BUKTI</b> — testimoni dan hasil nyata dari '+esc(aud)+': "orang seperti saya, bukan model iklan". Kejujuran jadi pembeda utama.',
+    '<b>03 · SUDUT GELIAT</b> — dorong keputusan lewat '+esc(offer)+': jendela waktu sempit, alasan jelas, CTA tegas tanpa berteriak.'
+  ]);
+  if(staticAd){
+    d.h('COPY IKLAN STATIS');
+    var hl='';ADS_HL.forEach(function(h,i){hl+=(i+1)+'. '+fill(h,ctx)+'\n';});
+    d.prompt('5 HEADLINE — PILIH TERBAIK',hl.trim());
+    d.prompt('BODY COPY','Kamu tahu rasanya: '+pain+'.\n\n'+brand+' dibuat persis untuk momen itu — sederhana dipakai, hasilnya konsisten.\n\n'+offer+'.');
+    d.prompt('PROMPT VISUAL KREATIF','social feed ad key visual for '+brand+', hero product centered, bold headline space at top, '+(s.tone==='Kalem premium'?'premium minimal set design, deep background':'bright energetic set, vivid props')+', studio lighting, 4:5');
+  }else{
+    d.h('SCRIPT '+s.durasi+' — GAYA '+s.gaya.toUpperCase());
+    var beats=adsBeats(s.durasi);
+    beats.forEach(function(b,i){
+      var lines=ADS_TXT[b[0]]||ADS_TXT.SOLUSI;
+      d.scene('SEG '+(i+1)+' · '+b[0],[
+        ['Timecode',fmtTC(b[1])+' → '+fmtTC(b[2])],
+        ['Narasi',esc(fill(lines[i%lines.length],ctx))],
+        ['Visual',ADS_VIS[b[0]]||'']
+      ],fmtTC(b[1])+'–'+fmtTC(b[2]));
+    });
+    d.h('SHOTLIST + PROMPT VISUAL');
+    var out='';
+    beats.forEach(function(b,i){
+      out+='SEG '+(i+1)+' ('+b[0]+') · TC '+fmtTC(b[1])+'→'+fmtTC(b[2])+'\n';
+      out+=(ADS_SHOT_EN[b[0]]||ADS_SHOT_EN.DEMO)+', authentic ad aesthetic, vertical 9:16';
+      if(i<beats.length-1)out+='\n\n';
+    });
+    d.prompt('PROMPT PER SEGMENT',out);
+    d.h('HEADLINE & COPY');
+    var hl2='';ADS_HL.forEach(function(h,i){hl2+=(i+1)+'. '+fill(h,ctx)+'\n';});
+    d.prompt('5 HEADLINE',hl2.trim());
+    d.prompt('PRIMARY TEXT','"'+pain+'" — kalau itu kamu tiap hari, '+brand+' layak dicoba sekali.\n\nBukan janji ajaib. Cuma '+s.jenis.toLowerCase()+' yang melakukan satu hal dengan benar.\n\n'+offer+'.');
+  }
+  d.h('CALL TO ACTION');
+  d.list([
+    'Utama: '+(s.tujuan==='Awareness'?('"Kenali '+esc(brand)+' dulu — klik untuk lihat"'):(s.tujuan==='Traffic ke link'?('"Semua detail ada di link — cek sekarang"'):('"'+esc(offer)+' — belanja sekarang"'))),
+    'Cadangan: "Simpan dulu, butuh nanti"',
+    'Cadangan: "Cek link bio sebelum kehabisan"'
+  ]);
+  d.h('SARAN TARGETING');
+  d.list([
+    'Minat: topik di sekitar gaya hidup '+esc(aud),
+    'Perilaku: pembeli aktif daring 30 hari terakhir',
+    'Retargeting: penonton video 50%+ dan pengunjung link',
+    'Lookalike: basis pembeli / pendaftar sebelumnya'
+  ]);
+  d.note('A/B test: jalankan dua dari tiga sudut di atas bersamaan dengan budget kecil 3–4 hari, matikan yang kalah, naikkan yang menang. Pastikan hanya satu variabel yang berbeda — hook-nya.');
+};
+
+/* ============ LIBRARY — 32 PROMPT ============ */
+var LIBCATS=[['chr','KARAKTER'],['pt','POTRET'],['cin','SINEMATIK'],['prod','PRODUK'],['fash','FASHION'],['land','LANSKAP'],['t3d','3D'],['food','MAKANAN']];
+var LIB=[
+ {t:'Hero Karakter Sinematik',c:'chr',d:'Karakter utama full-body dengan mood kota malam yang kuat.',k:'karakter hero laki laki gang malam hujan',p:'full-body cinematic character shot of a determined young man in a weathered olive utility jacket, narrow alley at night, single warm streetlamp overhead, rain-slick asphalt reflections, 35mm anamorphic look, moody grade, shallow depth of field, subtle film grain'},
+ {t:'Streetwear Kota',c:'chr',d:'Karakter gaya jalanan candid, seperti diambil fotografer dokumenter.',k:'karakter wanita hoodie cargo jalanan candid',p:'street style photo of a confident young woman in an oversized hoodie and wide cargo pants, mid-stride crossing a busy city street, motion blur background, natural daylight, candid documentary feel, 50mm'},
+ {t:'Karakter Fantasi Urban',c:'chr',d:'Techwear dengan sentuhan magis — cocok untuk seri berkelanjutan.',k:'karakter fantasi techwear rune neon malam',p:'portrait of an urban fantasy character, layered techwear with embroidered talisman patterns, faint glowing runes on the collar, night city bokeh behind, magenta and cyan practicals, cinematic contrast'},
+ {t:'Profesional Studio',c:'chr',d:'Potret korporat bersih untuk profil, about page, atau campaign.',k:'karakter pria jas profesional studio korporat',p:'studio portrait of a mid-30s professional in a tailored charcoal suit, seamless grey backdrop, softbox key with subtle rim light, confident relaxed posture, editorial magazine quality, 85mm f/1.8'},
+ {t:'Editorial Hitam-Putih',c:'pt',d:'Potret monokrom dramatis dengan cahaya pahat.',k:'potret hitam putih monokrom sidelight editorial',p:'black and white editorial portrait, strong side lighting carving out cheekbones, deep blacks, silver gelatin print feel, subject gazing slightly off-camera, medium format look'},
+ {t:'Golden Hour Jendela',c:'pt',d:'Potret hangat lembut oleh jendela — timeless.',k:'potret jendela golden hour hangat wanita',p:'warm golden-hour portrait by a large window, sheer curtains diffusing the light, soft catchlights, gentle skin texture, cozy indoor tones, 85mm f/1.4'},
+ {t:'Potret Neon Malam',c:'pt',d:'Wajah diterasi lampu neon — mood kota yang sinematik.',k:'potret neon malam magenta cyan kota',p:'night portrait lit by neon shop signs, magenta key and cyan rim, slight fog in the air, city night bokeh, cinematic mood, natural relaxed expression'},
+ {t:'Analog Film',c:'pt',d:'Nuansa film analog dengan grain lembut — nostalgia.',k:'potret analog film portra grain candid',p:'analog film portrait, Kodak Portra 400 palette, gentle grain, slightly overexposed highlights, candid laughter mid-conversation, timeless feel'},
+ {t:'Hujan Malam Kota',c:'cin',d:'Wide sinematik jalanan basah — opening scene yang kuat.',k:'sinematik hujan malam kota lampu pantulan',p:'cinematic wide shot of a rain-soaked city street at night, lone figure with an umbrella, glowing shopfronts reflected in puddles, anamorphic lens flares, moody blue-hour grade'},
+ {t:'Kedai Kopi Pagi',c:'cin',d:'Interior tenang dengan berkas cahaya dan uap kopi.',k:'sinematik kafe kopi pagi uap cahaya',p:'quiet cafe interior in early morning, steam rising from a cup, sunbeams cutting through dust, wooden textures, warm nostalgic grade, 35mm'},
+ {t:'Pegunungan Epik Fajar',c:'cin',d:'Lanskap berlapis kabut dengan siluet pendaki.',k:'sinematik gunung fajar kabut pendaki wide',p:'epic mountain landscape at dawn, layers of mist between ridgelines, first light hitting the peak, tiny hiker silhouette for scale, ultra-wide, crisp air feel'},
+ {t:'Lorong Misterius',c:'cin',d:'Koridor gelap simetris — tension tanpa kata.',k:'sinematik lorong gelap lampu neon hijau misterius',p:'long dim corridor with a single flickering fluorescent tube, green-cyan cast, wet floor reflections, unsettling cinematic atmosphere, centered symmetry'},
+ {t:'Produk Splash Air',c:'prod',d:'Botol dengan mahkota air beku — komersial kelas tinggi.',k:'produk botol splash air komersial skincare',p:'product photography of a skincare bottle frozen mid-splash with a water crown, high-speed flash look, glossy reflections, gradient studio backdrop, crisp commercial quality'},
+ {t:'Flat Lay Minimalis',c:'prod',d:'Tata letak atas yang bersih dengan ruang negatif.',k:'produk flat lay minimalis linen beige',p:'minimal flat lay of product on warm beige linen with two dried flowers and soft shadow play, top-down, negative space, natural soft light'},
+ {t:'Studio Dramatis',c:'prod',d:'Satu spotlight keras, asap tipis — kesan mewah.',k:'produk studio dramatis spotlight asap luxury',p:'dramatic studio product shot, single hard spotlight from above, deep falloff into black, smoke wisps curling around the base, luxury feel'},
+ {t:'Produk Lifestyle Alami',c:'prod',d:'Produk di konteks dapur pagi — hidup dan jujur.',k:'produk lifestyle dapur marble pagi tangan',p:'lifestyle product shot on a marble kitchen counter, morning light, hands entering frame reaching for the product, authentic candid feel, shallow depth of field'},
+ {t:'Editorial Street Style',c:'fash',d:'Model berjalan di zebra cross basah — energi tinggi.',k:'fashion editorial trench coat jalanan hujan',p:'fashion editorial, model in oversized trench walking through a wet crosswalk, taxis and neon behind, motion in the fabric, low-angle energy, editorial color grade'},
+ {t:'Kebaya Modern',c:'fash',d:'Batik dan kebaya dalam frame yang bangga dan elegan.',k:'fashion kebaya batik modern elegan',p:'modern kebaya editorial, intricate batik patterns in deep indigo, elegant pose against a colonial-era wall, golden late-afternoon light, refined and proud styling'},
+ {t:'Lookbook Monokrom',c:'fash',d:'Layer putih-di-putih dengan bayangan grafis.',k:'fashion lookbook monokrom putih beton',p:'monochrome lookbook shot, model in layered white-on-white outfit against a concrete wall, strong graphic shadows, minimal aesthetic, medium format crispness'},
+ {t:'Campaign Sportswear',c:'fash',d:'Sprint di rooftop fajar — power murni.',k:'fashion sportswear atlet sprint rooftop fajar',p:'sportswear campaign shot, athlete mid-sprint on a rooftop track at dawn, dramatic backlight and haze, sweat detail, powerful low angle'},
+ {t:'Sawah Terasering Kabut',c:'land',d:'Fajar berkabut dengan siluet petani — tenang.',k:'lanskap sawah terasering kabut fajar petani',p:'terraced rice fields at misty sunrise, layers of fog between the terraces, farmer silhouette with a hat walking the ridge, soft pastel sky, tranquil mood'},
+ {t:'Pantai Drone',c:'land',d:'Garis ombak dari udara — jernih khas majalah travel.',k:'lanskap pantai drone aerial turquoise ombak',p:'aerial drone shot of a turquoise coastline, foamy waves drawing white lines on the sand, lone wooden boat, midday clarity, travel-magazine quality'},
+ {t:'Gurun di Bawah Bintang',c:'land',d:'Bima Sakti di atas gumukan pasir.',k:'lanskap gurun bima sakti bintang malam pasir',p:'desert dunes under the Milky Way, warm foreground light on the sand ridges, deep blue night sky, long-exposure star field, sense of vast silence'},
+ {t:'Hutan Berkabut',c:'land',d:'Berkas cahaya menembus kabut antara batang pinus.',k:'lanskap hutan pinus kabut god rays pagi',p:'misty pine forest at dawn, god rays piercing through fog between dark trunks, mossy ground, muted green-grey palette, quiet mysterious atmosphere'},
+ {t:'Karakter 3D Stylized',c:'t3d',d:'Robot barista lucu dengan material keramik dan tembaga.',k:'3d karakter robot barista stylized tembaga',p:'stylized 3D character render, a cheerful barista robot with rounded shapes and copper accents, subsurface scattering on ceramic skin, soft studio lighting, Pixar-adjacent charm'},
+ {t:'Ikon Produk 3D Playful',c:'t3d',d:'Bentuk glossy pastel untuk thumbnail atau key visual.',k:'3d ikon produk glossy pastel clay',p:'playful 3D product icon, glossy spheres and rounded shapes forming an abstract music note, clay material, pastel gradient background, soft global illumination'},
+ {t:'Diorama Miniatur',c:'t3d',d:'Kafe mungil dengan detail tangan — tilt-shift.',k:'3d diorama miniatur kafe tilt shift makro',p:'miniature diorama of a cozy corner cafe, tilt-shift macro look, tiny hand-crafted details, warm interior lights glowing, shallow depth of field'},
+ {t:'Ruang Isometrik',c:'t3d',d:'Studio kreator potongan isometrik rapi.',k:'3d isometrik kamar studio kreator game art',p:'isometric 3D cutaway of a small creator studio room, neat prop details, soft ambient occlusion, clean pastel palette, game-art quality'},
+ {t:'Flat Lay Sarapan',c:'food',d:'Hidangan lokal dari atas dengan uap dan sambal.',k:'makanan flat lay sarapan kayu sambal uap',p:'top-down food flat lay on a rustic wooden table, Indonesian breakfast spread, sambal in a small stone bowl, steam wisps, natural window light, rich appetizing colors'},
+ {t:'Burger Splash',c:'food',d:'Bahan melayang tersusun — energi komersial.',k:'makanan burger splash bahan melayang dark',p:'gourmet burger with ingredients floating mid-air in layered assembly, sesame bun, dripping sauce, dark background, high-speed studio flash, dynamic commercial energy'},
+ {t:'Kopi Close-Up',c:'food',d:'Latte art dituang — detail macro buih.',k:'makanan kopi latte art macro buih cafe',p:'extreme close-up of latte art being poured, crema swirling, warm cafe backlight, macro detail on foam texture, cozy morning mood'},
+ {t:'Street Food Malam',c:'food',d:'Wok berapi, uap, antrean kabur — hidup.',k:'makanan street food malam wok api mie uap',p:'night street food stall, wok tossing noodles with fire flaring, steam and motion, hungry queue blurred behind, vibrant authentic energy, handheld reportage feel'}];
+function renderLibForm(){
+  S.cat=S.cat||'all';
+  var cats='<button type="button" class="seg-b'+(S.cat==='all'?' on':'')+'" data-v="all">SEMUA</button>';
+  LIBCATS.forEach(function(c){cats+='<button type="button" class="seg-b'+(S.cat===c[0]?' on':'')+'" data-v="'+c[0]+'">'+c[1]+'</button>';});
+  $('#stageForm').innerHTML=
+    '<div class="f-sec">CARI PROMPT</div>'+
+    '<div class="lib-search"><i data-lucide="search"></i><input type="text" data-key="q" value="'+esc(S.q||'')+'" placeholder="ketik kata kunci…"></div>'+
+    '<div class="f-sec">KATEGORI</div>'+
+    '<div class="field"><div class="seg" data-key="cat" style="flex-wrap:wrap">'+cats+'</div></div>'+
+    '<div class="f-note" style="margin-top:16px">'+LIB.length+' prompt asli — klik judul untuk membuka, salin apa adanya, atau kirim langsung ke Image Generator untuk dikembangkan.</div>';
+  icons();
+}
+TOOLMAP.lib.paint=function(){
+  S.cat=S.cat||'all';
+  var q=(S.q||'').toLowerCase();
+  var items=LIB.map(function(x,i){x.i=i;return x;}).filter(function(x){
+    return (S.cat==='all'||x.c===S.cat)&&(!q||(x.t+' '+x.d+' '+x.k).toLowerCase().indexOf(q)>=0);
+  });
+  var list='';
+  if(items.length){
+    items.forEach(function(x){
+      var cn=(LIBCATS.find(function(c){return c[0]===x.c;})||['',''])[1];
+      list+='<div class="lib-row">'+
+        '<div class="lr-h"><span class="lr-t">'+x.t+'</span><span class="lr-cat">'+cn+'</span><i data-lucide="chevron-down" class="lr-chev"></i></div>'+
+        '<div class="lr-body"><p class="lr-desc">'+x.d+'</p>'+
+        '<div class="b-prompt"><div class="bp-top"><span class="bp-title">PROMPT — SALIN ATAU KEMBANGKAN</span></div><pre>'+esc(x.p)+'</pre></div>'+
+        '<div class="lr-acts"><button class="mini-btn" data-lcopy="'+x.i+'"><i data-lucide="copy"></i>SALIN</button><button class="mini-btn" data-lsend="'+x.i+'"><i data-lucide="send"></i>KIRIM KE IMAGE GENERATOR</button></div>'+
+        '</div></div>';
+    });
+  }else{
+    list='<div class="empty"><i data-lucide="search-x"></i><b>TIDAK KETEMU</b><span>Coba kata kunci lain atau ganti kategori.</span></div>';
+  }
+  $('#stageOut').innerHTML='<div class="out-head"><div><div class="out-title"><em style="font-style:normal;color:var(--red)">'+CUR.num+'</em>'+CUR.name+'</div>'+
+    '<div class="out-meta">'+items.length+' DARI '+LIB.length+' PROMPT'+(q?(' · PENCARIAN: "'+esc(S.q)+'"'):'')+'</div></div></div>'+list;
+  icons();
+};
+function sendToImageGen(prompt){
+  openTool('imagegen');
+  setTimeout(function(){
+    S.ide=prompt;renderForm();renderOut();
+    toast('PROMPT DITERUSKAN — LANJUTKAN DI IMAGE GENERATOR','send');
+  },620);
+}
+
+/* ============ VIDEO TOOLS ============ */
+var VID={url:null,el:null,dur:0,w:0,h:0,file:null};
+var FRAMES=null,SCENES=null;
+var VC=document.createElement('canvas');
+var SC2=document.createElement('canvas');
+function tick(){return new Promise(function(r){setTimeout(r,0);});}
+function seekShot(v,t,cw,ch){
+  return new Promise(function(res){
+    var done=false,to=null;
+    var fin=function(){
+      if(done)return;done=true;
+      v.removeEventListener('seeked',fin);clearTimeout(to);
+      try{VC.width=cw;VC.height=ch;VC.getContext('2d').drawImage(v,0,0,cw,ch);res(true);}
+      catch(e){res(false);}
+    };
+    to=setTimeout(fin,1200);
+    v.addEventListener('seeked',fin);
+    var tt=Math.max(0,Math.min(t,(VID.dur||t)-0.04));
+    if(Math.abs(v.currentTime-tt)<0.005){fin();}
+    else{try{v.currentTime=tt;}catch(e){fin();}}
+  });
+}
+function showProg(){var p=$('#vProg');if(p){p.style.display='block';setProg(0,'MENYIAPKAN…');}}
+function setProg(p,txt){
+  var b=$('#vBar'),s=$('#vStat'),c=$('#vPct');
+  if(b)b.style.width=Math.round(p*100)+'%';
+  if(s)s.textContent=txt||'';
+  if(c)c.textContent=Math.round(p*100)+'%';
+}
+function hideProg(){
+  setProg(1,'SELESAI');
+  setTimeout(function(){var p=$('#vProg');if(p)p.style.display='none';},900);
+}
+function vidInfoHTML(){
+  return '<span>FILE <b>'+esc(VID.file?VID.file.name:'—')+'</b></span><span>DURASI <b>'+fmtTC(VID.dur)+'</b></span><span>RESOLUSI <b>'+VID.w+'x'+VID.h+'</b></span>';
+}
+function loadVideo(file){
+  if(VID.url)URL.revokeObjectURL(VID.url);
+  FRAMES=null;SCENES=null;
+  VID.url=URL.createObjectURL(file);VID.file=file;
+  var v=document.createElement('video');
+  v.preload='auto';v.muted=true;v.playsInline=true;v.src=VID.url;VID.el=v;
+  v.onloadedmetadata=function(){
+    VID.dur=v.duration||0;VID.w=v.videoWidth||720;VID.h=v.videoHeight||1280;
+    var info=$('#vidInfo');
+    if(info){info.style.display='flex';info.innerHTML=vidInfoHTML();}
+    toast('VIDEO TERMUAT — SIAP DIPROSES','film');
+    if(CUR&&CUR.paint)CUR.paint();
+  };
+  v.onerror=function(){toast('GAGAL MEMUAT VIDEO — COBA FORMAT LAIN','x');};
+}
+function renderVideoForm(){
+  var isScene=(CUR.id==='sceneext');
+  S.fmode=S.fmode||'even';S.fcount=(S.fcount===undefined?12:S.fcount);S.sens=S.sens||6;
+  var min=(S.fmode==='interval')?1:4,max=(S.fmode==='interval')?15:60;
+  S.fcount=Math.max(min,Math.min(max,S.fcount));
+  var html='<div class="f-sec">SUMBER VIDEO</div>'+
+    '<div class="field"><div class="drop" data-vdrop><i data-lucide="'+(isScene?'scan-line':'film')+'"></i><b>LEPAS VIDEO DI SINI</b><span>atau klik untuk memilih — MP4 / WebM / MOV · diproses 100% lokal di browser</span></div>'+
+    '<input type="file" accept="video/*" hidden id="vidFile">'+
+    '<div class="vidinfo" id="vidInfo" style="display:none"></div></div>';
+  if(isScene){
+    html+='<div class="f-sec">ANALISIS</div>'+
+      '<div class="field"><label class="f-label"><span>Sensitivitas deteksi</span><span class="sl-v">'+S.sens+'/10</span></label>'+
+      '<div class="sl"><input type="range" data-key="sens" min="1" max="10" step="1" value="'+S.sens+'"></div>'+
+      '<div class="f-note">rendah = hanya cut keras · tinggi = transisi halus ikut terdeteksi</div></div>'+
+      '<button type="button" class="btn btn-red" data-act="detect" style="width:100%;justify-content:center"><i data-lucide="scan-line"></i>DETEKSI SCENE</button>';
+  }else{
+    html+='<div class="f-sec">MODE EKSTRAKSI</div>'+
+      '<div class="field"><div class="seg" data-key="fmode">'+
+      '<button type="button" class="seg-b'+(S.fmode==='even'?' on':'')+'" data-v="even">MERATA</button>'+
+      '<button type="button" class="seg-b'+(S.fmode==='interval'?' on':'')+'" data-v="interval">INTERVAL</button></div></div>'+
+      '<div class="field"><label class="f-label"><span>'+(S.fmode==='interval'?'Ambil setiap':'Jumlah frame')+'</span><span class="sl-v">'+S.fcount+(S.fmode==='interval'?' detik':'')+'</span></label>'+
+      '<div class="sl"><input type="range" data-key="fcount" min="'+min+'" max="'+max+'" step="1" value="'+S.fcount+'"></div>'+
+      '<div class="f-note">'+(S.fmode==='interval'?'satu frame setiap N detik sepanjang video':'frame diambil merata dari awal sampai akhir video')+'</div></div>'+
+      '<button type="button" class="btn btn-red" data-act="extract" style="width:100%;justify-content:center"><i data-lucide="images"></i>EKSTRAKSI FRAME</button>';
+  }
+  html+='<div class="prog" id="vProg" style="display:none"><div class="prog-bar"><i id="vBar"></i></div><div class="prog-l"><span id="vStat">SIAP</span><b id="vPct">0%</b></div></div>'+
+    '<div class="f-note" style="margin-top:16px">Video tidak pernah meninggalkan perangkatmu — seluruh analisis berjalan di canvas lokal.</div>';
+  $('#stageForm').innerHTML=html;
+  if(VID.dur&&$('#vidInfo')){$('#vidInfo').style.display='flex';$('#vidInfo').innerHTML=vidInfoHTML();}
+  icons();
+}
+async function extractFrames(){
+  if(!VID.el||!VID.dur){toast('MUAT VIDEO DULU DI PANEL KIRI','film');return;}
+  rec(true);showProg();
+  var times=[];
+  var i;
+  if(S.fmode==='interval'){for(var t=0.1;t<VID.dur;t+=S.fcount)times.push(t);}
+  else{for(i=0;i<S.fcount;i++)times.push((i+0.5)*VID.dur/S.fcount);}
+  var cw=640,ch=Math.max(2,Math.round(640*VID.h/Math.max(1,VID.w)));
+  var out=[];
+  for(i=0;i<times.length;i++){
+    setProg(i/times.length,'MENGAMBIL FRAME '+(i+1)+'/'+times.length);
+    var ok=await seekShot(VID.el,times[i],cw,ch);
+    if(ok)out.push({t:times[i],url:VC.toDataURL('image/jpeg',0.86)});
+    if(i%3===0)await tick();
+  }
+  FRAMES=out;rec(false);hideProg();CUR.paint();
+  toast(out.length+' FRAME BERHASIL DIEKSTRAKSI','images');
+}
+async function detectScenes(){
+  if(!VID.el||!VID.dur){toast('MUAT VIDEO DULU DI PANEL KIRI','film');return;}
+  rec(true);showProg();
+  var v=VID.el;
+  var N=Math.min(480,Math.max(80,Math.round(VID.dur*4)));
+  var step=VID.dur/N;
+  var sw=48,sh=Math.max(12,Math.round(48*VID.h/Math.max(1,VID.w)));
+  SC2.width=sw;SC2.height=sh;
+  var sx=SC2.getContext('2d',{willReadFrequently:true});
+  var cw=160,ch=Math.max(2,Math.round(160*VID.h/Math.max(1,VID.w)));
+  var sigs=[],thumbs=[],i,j;
+  for(i=0;i<N;i++){
+    setProg(i/N*0.65,'MEMINDAI '+pad(i+1)+'/'+N);
+    var ok=await seekShot(v,i*step,cw,ch);
+    if(!ok)continue;
+    thumbs.push(VC.toDataURL('image/jpeg',0.55));
+    sx.drawImage(VC,0,0,sw,sh);
+    var px=sx.getImageData(0,0,sw,sh).data;
+    var sig=new Float32Array(sw*sh*3);
+    for(j=0,o=0;j<px.length;j+=4,o+=3){sig[o]=px[j];sig[o+1]=px[j+1];sig[o+2]=px[j+2];}
+    sigs.push(sig);
+    if(i%8===0)await tick();
+  }
+  if(sigs.length<4){rec(false);hideProg();toast('VIDEO TERLALU PENDEK UNTUK DIANALISIS','x');return;}
+  var diffs=[];
+  for(i=1;i<sigs.length;i++){
+    var dd=0,a=sigs[i-1],b=sigs[i];
+    for(j=0;j<a.length;j++)dd+=Math.abs(a[j]-b[j]);
+    diffs.push(dd/a.length);
+  }
+  var mean=diffs.reduce(function(a,b){return a+b;},0)/diffs.length;
+  var sd=Math.sqrt(diffs.reduce(function(a,b){return a+(b-mean)*(b-mean);},0)/diffs.length);
+  var k=0.55+(10-(S.sens||6))*0.38;
+  var th=Math.max(mean+k*sd,mean*1.7+3,6);
+  var cuts=[],last=-9;
+  diffs.forEach(function(dd,idx){
+    var t=(idx+1)*step;
+    if(dd>th&&t-last>=0.6){cuts.push(idx+1);last=t;}
+  });
+  var scenes=[],cs=0;
+  cuts.forEach(function(ci){
+    var t=ci*step;
+    if(t-cs>=0.35){scenes.push({s:cs,e:t});cs=t;}
+  });
+  scenes.push({s:cs,e:VID.dur});
+  for(i=0;i<scenes.length;i++){
+    setProg(0.65+0.35*i/scenes.length,'KEYFRAME SCENE '+pad(i+1)+'/'+scenes.length);
+    var mid=scenes[i].s+Math.min(0.12,(scenes[i].e-scenes[i].s)*0.25);
+    await seekShot(v,Math.min(mid,VID.dur-0.05),640,Math.max(2,Math.round(640*VID.h/Math.max(1,VID.w))));
+    scenes[i].kf=VC.toDataURL('image/jpeg',0.85);
+    var i0=Math.floor(scenes[i].s/step);
+    var i1=Math.max(i0+1,Math.min(thumbs.length-1,Math.ceil(scenes[i].e/step)-1));
+    var nS=Math.max(2,Math.min(6,i1-i0+1));
+    scenes[i].strip=[];
+    for(j=0;j<nS;j++){
+      var si=Math.max(0,Math.min(thumbs.length-1,i0+Math.round((i1-i0)*j/(nS-1||1))));
+      scenes[i].strip.push(thumbs[si]);
+    }
+    await tick();
+  }
+  SCENES=scenes;rec(false);hideProg();CUR.paint();
+  toast(scenes.length+' SCENE TERDETEKSI','scan-line');
+}
+function sceneReport(){
+  if(!SCENES)return '';
+  var lines=['LAPORAN SCENE — PABRIK-AI SCENE EXTRACTOR',
+    'SUMBER : '+(VID.file?VID.file.name:'—'),
+    'DURASI : '+fmtTC(VID.dur),
+    'SCENE  : '+SCENES.length+' · RATA-RATA '+(VID.dur/SCENES.length).toFixed(1)+'s',''];
+  SCENES.forEach(function(sc,i){
+    lines.push('SCENE '+pad(i+1)+' | '+fmtTC(sc.s)+' → '+fmtTC(sc.e)+' | '+(sc.e-sc.s).toFixed(1)+'s');
+  });
+  return lines.join('\n');
+}
+TOOLMAP.frameext.paint=function(){
+  var has=FRAMES&&FRAMES.length;
+  var grid='';
+  if(has){
+    FRAMES.forEach(function(f,i){
+      grid+='<div class="frame" data-fz="'+i+'"><img src="'+f.url+'" alt="frame '+(i+1)+'"><span class="ftc">'+fmtTC(f.t)+'</span><button class="mini-btn fdl" data-fdl="'+i+'"><i data-lucide="download"></i></button></div>';
+    });
+  }
+  $('#stageOut').innerHTML='<div class="out-head"><div><div class="out-title"><em style="font-style:normal;color:var(--red)">'+CUR.num+'</em>'+CUR.name+'</div>'+
+    '<div class="out-meta">'+(VID.dur?('SUMBER: '+esc(VID.file?VID.file.name:'')+' · '+fmtTC(VID.dur)):'MENUNGGU SUMBER VIDEO')+' · PROSES LOKAL</div></div>'+
+    (has?('<div class="out-actions"><button class="mini-btn" data-frall="1"><i data-lucide="download"></i>UNDUH SEMUA ('+has+')</button></div>'):'')+'</div>'+
+    (has?('<div class="frames">'+grid+'</div><div class="b-note">Klik gambar untuk memperbesar · tombol unduh per frame ada di pojok kanan atas tiap gambar. Cocok untuk storyboard, referensi warna, dan bahan produksi lanjutan.</div>')
+      :'<div class="empty"><i data-lucide="images"></i><b>BELUM ADA FRAME</b><span>Muat video di panel kiri, atur mode ekstraksi, lalu tekan EKSTRAKSI FRAME.</span></div>');
+  icons();
+};
+TOOLMAP.sceneext.paint=function(){
+  var has=SCENES&&SCENES.length;
+  var body='';
+  if(has){
+    var avg=VID.dur/SCENES.length,cpm=SCENES.length/(VID.dur/60);
+    var iram=cpm>24?'CEPAT — potongan rapat, gaya dinamis':(cpm>12?'SEDANG — ritme seimbang':'TENANG — shot panjang, dramatis');
+    var list='';
+    SCENES.forEach(function(sc,i){
+      var strip='';
+      sc.strip.forEach(function(u){strip+='<img src="'+u+'" alt="">';});
+      list+='<div class="scene-it"><div class="si-head"><img src="'+sc.kf+'" alt="scene '+(i+1)+'">'+
+        '<div class="si-meta"><b>SCENE '+pad(i+1)+'</b><span>'+fmtTC(sc.s)+' → '+fmtTC(sc.e)+'</span></div>'+
+        '<span class="si-dur">'+(sc.e-sc.s).toFixed(1)+'s</span></div>'+
+        '<div class="si-body"><div class="si-strip">'+strip+'</div>'+
+        '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">'+
+        '<button class="mini-btn" data-kf="'+i+'"><i data-lucide="download"></i>UNDUH KEYFRAME</button>'+
+        '<button class="mini-btn" data-slb="'+i+'"><i data-lucide="maximize-2"></i>PERBESAR</button>'+
+        '</div></div></div>';
+    });
+    body='<div class="b-h"><span>RINGKASAN ANALISIS</span></div>'+
+      '<div class="b-kv">'+
+      '<div class="k">Jumlah scene</div><div class="v">'+SCENES.length+' scene</div>'+
+      '<div class="k">Durasi total</div><div class="v">'+fmtTC(VID.dur)+'</div>'+
+      '<div class="k">Rata-rata shot</div><div class="v">'+avg.toFixed(1)+' detik</div>'+
+      '<div class="k">Cut per menit</div><div class="v">'+cpm.toFixed(1)+' cut/menit</div>'+
+      '<div class="k">Irama</div><div class="v">'+iram+'</div></div>'+
+      '<div class="out-actions" style="margin:14px 0"><button class="mini-btn" data-srep="1"><i data-lucide="copy"></i>SALIN LAPORAN TIMECODE</button></div>'+
+      '<div class="b-h"><span>SUSUNAN SCENE — '+SCENES.length+' TERDETEKSI</span></div>'+list+
+      '<div class="b-note">Deteksi dilakukan dengan membandingkan sampel piksel antar frame — sensitivitas bisa diatur di panel kiri lalu jalankan ulang untuk hasil yang berbeda. Klik kepala scene untuk membuka strip thumbnail.</div>';
+  }else{
+    body='<div class="empty"><i data-lucide="scan-line"></i><b>BELUM ADA ANALISIS</b><span>Muat video di panel kiri, atur sensitivitas, lalu tekan DETEKSI SCENE.</span></div>';
+  }
+  $('#stageOut').innerHTML='<div class="out-head"><div><div class="out-title"><em style="font-style:normal;color:var(--red)">'+CUR.num+'</em>'+CUR.name+'</div>'+
+    '<div class="out-meta">'+(VID.dur?('SUMBER: '+esc(VID.file?VID.file.name:'')+' · '+fmtTC(VID.dur)):'MENUNGGU SUMBER VIDEO')+' · PROSES LOKAL</div></div></div>'+body;
+  icons();
+};
+
+/* ============ LISTENER HASIL ============ */
+ $('#stageOut').addEventListener('click',function(e){
+  if(!CUR)return;
+  var cp=e.target.closest('[data-copy]');
+  if(cp){
+    var it=PCM.get(cp.getAttribute('data-copy'));
+    if(it){copyText(it.body);toast('"'+it.title+'" DISALIN','copy');saveTakeIfNew();}
+    return;
+  }
+  var dc=e.target.closest('[data-doc]');
+  if(dc&&curDoc){
+    var a=dc.getAttribute('data-doc');
+    if(a==='copy'){copyText(curDoc.text);toast('DOKUMEN LENGKAP DISALIN','copy');}
+    else if(a==='dl'){dlText(curDoc.text,'pabrik-ai_'+CUR.id+'.txt');toast('DOKUMEN DIUNDUH','download');}
+    else if(a==='save'){saveTakeIfNew(true);}
+    return;
+  }
+  var lr=e.target.closest('.lib-row');
+  if(lr&&!e.target.closest('button')){lr.classList.toggle('open');return;}
+  var lc=e.target.closest('[data-lcopy]');
+  if(lc){copyText(LIB[+lc.getAttribute('data-lcopy')].p);toast('PROMPT DISALIN — SIAP DITEMPEL','copy');return;}
+  var ls=e.target.closest('[data-lsend]');
+  if(ls){sendToImageGen(LIB[+ls.getAttribute('data-lsend')].p);return;}
+  var fdl=e.target.closest('[data-fdl]');
+  if(fdl&&FRAMES){
+    var f1=FRAMES[+fdl.getAttribute('data-fdl')];
+    dlURL(f1.url,'frame_'+fmtTC(f1.t).replace(/:/g,'-')+'.jpg');
+    toast('FRAME DIUNDUH','download');return;
+  }
+  var fr=e.target.closest('[data-fz]');
+  if(fr&&FRAMES){
+    var f2=FRAMES[+fr.getAttribute('data-fz')];
+    openLB(f2.url,fmtTC(f2.t));return;
+  }
+  var fall=e.target.closest('[data-frall]');
+  if(fall&&FRAMES){
+    FRAMES.forEach(function(f,i){
+      setTimeout(function(){dlURL(f.url,'frame_'+String(i+1).padStart(3,'0')+'_'+fmtTC(f.t).replace(/:/g,'-')+'.jpg');},i*220);
+    });
+    toast(FRAMES.length+' FRAME SEDANG DIUNDUH','download');return;
+  }
+  var sh=e.target.closest('.si-head');
+  if(sh){sh.parentElement.classList.toggle('open');return;}
+  var skf=e.target.closest('[data-kf]');
+  if(skf&&SCENES){
+    dlURL(SCENES[+skf.getAttribute('data-kf')].kf,'scene'+(+skf.getAttribute('data-kf')+1)+'_keyframe.jpg');
+    toast('KEYFRAME DIUNDUH','download');return;
+  }
+  var slb=e.target.closest('[data-slb]');
+  if(slb&&SCENES){
+    var sc=SCENES[+slb.getAttribute('data-slb')];
+    openLB(sc.kf,'SCENE '+(+slb.getAttribute('data-slb')+1)+' · '+fmtTC(sc.s)+' → '+fmtTC(sc.e));return;
+  }
+  var srep=e.target.closest('[data-srep]');
+  if(srep){copyText(sceneReport());toast('LAPORAN SCENE DISALIN','copy');return;}
+});
+
+/* ============ NAVIGASI & UTIL ============ */
+function openTool(id){
+  var t=TOOLMAP[id];if(!t)return;
+  if(CUR&&CUR.id===id)return;
+  var w=$('#wipe');
+  w.classList.remove('run');void w.offsetWidth;w.classList.add('run');
+  setTimeout(function(){
+    CUR=t;S=Object.assign({},defaults(id));S._step=1;lastSaved='';curDoc=null;
+    $('#viewIndex').hidden=true;$('#viewStage').hidden=false;
+    $('#crumb').textContent='MODUL '+t.num+' — '+t.name.toUpperCase();
+    $('#stTitle').innerHTML='<em>'+t.num+'</em>'+t.name;
+    $('#stageGrid').classList.remove('tab-out');
+    $('#mtForm').classList.add('on');$('#mtOut').classList.remove('on');
+    renderForm();renderOut();
+    window.scrollTo(0,0);
+  },290);
+}
+function goIndex(){
+  var w=$('#wipe');
+  w.classList.remove('run');void w.offsetWidth;w.classList.add('run');
+  setTimeout(function(){
+    $('#viewStage').hidden=true;$('#viewIndex').hidden=false;
+    CUR=null;rec(false);
+    $('#crumb').textContent='INDEKS MODUL';
+    window.scrollTo(0,0);
+  },290);
+}
+function goLiveTab(){
+  $('#stageGrid').classList.add('tab-out');
+  $('#mtOut').classList.add('on');$('#mtForm').classList.remove('on');
+}
+function rec(on){var r=$('#recDot');if(r)r.classList.toggle('on',!!on);}
+function openLB(url,tc){$('#lbImg').src=url;$('#lbTc').textContent=tc;$('#lightbox').classList.add('open');}
+function fallbackCopy(txt){
+  var ta=document.createElement('textarea');
+  ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');}catch(e){}
+  ta.remove();
+}
+function copyText(txt){
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).catch(function(){fallbackCopy(txt);});
+  }else{fallbackCopy(txt);}
+}
+function dlText(txt,name){dlBlob(new Blob([txt],{type:'text/plain;charset=utf-8'}),name);}
+function dlBlob(b,name){
+  var u=URL.createObjectURL(b);
+  var a=document.createElement('a');a.href=u;a.download=name;a.click();
+  setTimeout(function(){URL.revokeObjectURL(u);},4000);
+}
+function dlURL(url,name){var a=document.createElement('a');a.href=url;a.download=name;a.click();}
+function toast(msg,icon){
+  var t=document.createElement('div');t.className='toast';
+  t.innerHTML='<i data-lucide="'+(icon||'check')+'"></i><span>'+msg+'</span>';
+  $('#toasts').appendChild(t);icons();
+  setTimeout(function(){t.classList.add('bye');setTimeout(function(){t.remove();},320);},2600);
+}
+
+/* riwayat take */
+var TKEY='pabrikai_takes_v2';
+function getTakes(){try{return JSON.parse(localStorage.getItem(TKEY))||[];}catch(e){return [];}}
+function setTakes(a){try{localStorage.setItem(TKEY,JSON.stringify(a));}catch(e){}updateTakeUI();}
+function updateTakeUI(){
+  var n=getTakes().length;
+  var c=$('#takeCount');if(c)c.textContent=n;
+  var dd=$('#dcTakes');if(dd)dd.textContent=n+' TERARSIP';
+}
+function saveTakeIfNew(force){
+  if(!curDoc||!CUR)return;
+  var sig=CUR.id+'|'+curDoc.text.slice(0,400);
+  if(!force&&sig===lastSaved)return;
+  lastSaved=sig;
+  var takes=getTakes();
+  takes.unshift({tool:CUR.id,toolName:CUR.name,num:CUR.num,time:Date.now(),text:curDoc.text,prev:curDoc.text.slice(0,220)});
+  if(takes.length>60)takes.length=60;
+  setTakes(takes);
+  toast('TAKE DISIMPAN KE ARSIP','bookmark');
+}
+function renderDrawer(){
+  var takes=getTakes(),el=$('#drList');
+  if(!takes.length){el.innerHTML='<div class="dr-empty">BELUM ADA TAKE.<br>BUKA MODUL APA PUN, LALU TEKAN<br>"SIMPAN TAKE" DI PANEL HASIL.</div>';return;}
+  var h='';
+  takes.forEach(function(t,i){
+    h+='<div class="take"><div class="tk-h"><b>TAKE #'+(takes.length-i)+'</b><span>'+new Date(t.time).toLocaleString('id-ID',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+'</span></div>'+
+      '<div class="tk-tool">'+t.num+' · '+esc(t.toolName)+'</div>'+
+      '<div class="tk-prev">'+esc(t.prev)+'…</div>'+
+      '<div class="tk-acts"><button class="mini-btn" data-tkcopy="'+i+'"><i data-lucide="copy"></i>SALIN</button><button class="mini-btn" data-tkdel="'+i+'"><i data-lucide="trash-2"></i>HAPUS</button></div></div>';
+  });
+  el.innerHTML=h;icons();
+}
+
+/* indeks */
+function renderIndex(){
+  var h='';
+  GRPS.forEach(function(g){
+    var ts=TOOLS.filter(function(t){return t.grp===g[0];});
+    h+='<div class="grp"><div class="grp-h"><span class="g-id">'+g[0]+'</span><span class="g-t">'+g[1]+'</span><span class="g-line"></span><span class="g-n">'+pad(ts.length)+' MODUL</span></div>';
+    ts.forEach(function(t){
+      h+='<div class="row" data-tool="'+t.id+'"><div class="row-head">'+
+        '<span class="row-num">'+t.num+'</span><span class="row-name">'+t.name+'</span>'+
+        '<span class="row-cat">'+t.cat+'</span><span class="row-badge '+t.badge.toLowerCase()+'">'+t.badge+'</span>'+
+        '<span class="row-arrow"><i data-lucide="arrow-up-right"></i></span></div>'+
+        '<div class="row-body"><div><div class="row-desc"><p>'+t.desc+'</p><button class="mini-btn" type="button">BUKA MODUL<i data-lucide="arrow-right"></i></button></div></div></div></div>';
+    });
+    h+='</div>';
+  });
+  $('#modulList').innerHTML=h;
+}
+
+/* binding global */
+ $('#btnBack').addEventListener('click',goIndex);
+ $('#btnHome').addEventListener('click',function(){if(CUR){goIndex();}else{window.scrollTo({top:0,behavior:'smooth'});}});
+ $('#ctaBrowse').addEventListener('click',function(){$('#modul').scrollIntoView({behavior:'smooth'});});
+ $('#modulList').addEventListener('click',function(e){var r=e.target.closest('[data-tool]');if(r)openTool(r.getAttribute('data-tool'));});
+document.addEventListener('click',function(e){var o=e.target.closest('[data-open]');if(o)openTool(o.getAttribute('data-open'));});
+ $('#btnHist').addEventListener('click',function(){renderDrawer();$('#drawer').classList.add('open');});
+ $('#drClose').addEventListener('click',function(){$('#drawer').classList.remove('open');});
+ $('#drList').addEventListener('click',function(e){
+  var c=e.target.closest('[data-tkcopy]');
+  if(c){copyText(getTakes()[+c.getAttribute('data-tkcopy')].text);toast('TAKE DISALIN KE CLIPBOARD','copy');return;}
+  var del=e.target.closest('[data-tkdel]');
+  if(del){var a=getTakes();a.splice(+del.getAttribute('data-tkdel'),1);setTakes(a);renderDrawer();toast('TAKE DIHAPUS','trash-2');}
+});
+ $('#lbClose').addEventListener('click',function(){$('#lightbox').classList.remove('open');});
+ $('#lightbox').addEventListener('click',function(e){if(e.target.id==='lightbox'){$('#lightbox').classList.remove('open');}});
+ $('#lbDl').addEventListener('click',function(){dlURL($('#lbImg').src,'frame_'+$('#lbTc').textContent.replace(/[^0-9]/g,'')+'.jpg');toast('FRAME DIUNDUH','download');});
+ $('#mtForm').addEventListener('click',function(){$('#stageGrid').classList.remove('tab-out');$('#mtForm').classList.add('on');$('#mtOut').classList.remove('on');});
+ $('#mtOut').addEventListener('click',goLiveTab);
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Escape')return;
+  if($('#lightbox').classList.contains('open')){$('#lightbox').classList.remove('open');return;}
+  if($('#drawer').classList.contains('open')){$('#drawer').classList.remove('open');return;}
+  if(CUR)goIndex();
+});
+
+/* crosshair hero */
+(function(){
+  var hero=$('#hero');if(!hero)return;
+  hero.addEventListener('mousemove',function(e){
+    var r=hero.getBoundingClientRect();
+    var x=e.clientX-r.left,y=e.clientY-r.top;
+    $('#xhV').style.left=x+'px';$('#xhH').style.top=y+'px';
+    $('#xhD').style.left=x+'px';$('#xhD').style.top=y+'px';
+    $('#xhT').style.left=(x+26)+'px';$('#xhT').style.top=(y-28)+'px';
+    $('#xhT').textContent='X:'+String(Math.round(x)).padStart(4,'0')+' Y:'+String(Math.round(y)).padStart(4,'0');
+    hero.classList.add('aim');
+  });
+  hero.addEventListener('mouseleave',function(){hero.classList.remove('aim');});
+})();
+
+/* timecode 24fps */
+(function(){
+  var f=0;
+  var tH=$('#tc'),heroT=$('#heroTc');
+  setInterval(function(){
+    f++;
+    var ff=f%24,ss=Math.floor(f/24)%60,mm=Math.floor(f/1440)%60,hh=Math.floor(f/864000)%24;
+    if(tH)tH.innerHTML='TC '+pad(hh)+':'+pad(mm)+':<b>'+pad(ss)+':'+pad(ff)+'</b>';
+    if(heroT)heroT.textContent=pad(hh)+':'+pad(mm)+':'+pad(ss)+':'+pad(ff);
+  },1000/24);
+})();
+
+/* intro leader */
+(function(){
+  var intro=$('#intro'),num=$('#inNum');if(!intro)return;
+  var n=3,done=false;
+  var tm=setInterval(function(){n--;if(n<1){finish();}else{num.textContent=n;}},700);
+  function finish(){
+    if(done)return;done=true;clearInterval(tm);
+    intro.classList.add('gone');
+    setTimeout(function(){intro.remove();},700);
+  }
+  intro.addEventListener('click',finish);
+  setTimeout(finish,3200);
+})();
+
+/* init */
+renderIndex();
+icons();
+updateTakeUI();
+</script>
+</body>
+</html>
